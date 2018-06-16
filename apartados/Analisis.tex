@@ -13,13 +13,31 @@ Para empezar, recopilemos las funcionalidades que deben ser implementadas en el 
 	\item \textbf{Soporte de almacenamiento externo:} el sistema debe detectar en todo momento que se ha insertado un dispositivo externo, haciendo lo necesario para su montaje y su puesta a punto para el uso de la aplicación. Para esto, será imprescindible que acepte la mayoría de los formatos convencionales actualmente (\textit{NTFS, FAT, exFAT} y \textit{EXTx} entre otros).
 \end{itemize}
 
-Vistos éstos, examinemos los requerimientos de la infraestructura externos a la aplicación, como lo es el \textbf{servicio de actualizaciones}:
+Vistos dichos requisitos, examinemos los requerimientos de la infraestructura externos a la aplicación, como lo es el \textbf{servicio de actualizaciones}:
 
 \begin{itemize}
 	\item El paradigma de despliegue de versiones debe ser fácil de acoplar al sistema y transparente con la aplicación, de forma que ésta sea consciente de la existencia de nuevas versiones y pueda pedir confirmación al usuario. Además, deberán estar centralizadas en un servidor (ya sea local a la empresa o contratado de forma externa); de forma que en lugar de enviarse la actualización individualmente a cada máquina, sean las propias máquinas las que mediante la comunicación con el servidor detecten las potencialmente nuevas versiones.
+	\item Para poder realizar actualizaciones atómicas de todo el sistema, será necesario un particionado múltiple. Es decir, el mismo sistema operativo deberá tener dos particiones con sistema de ficheros. Así, mientras una está en ejecución la nueva versión podrá ser instalada en la otra.
 	\item Este intercambio de información podrá producirse mediante red cableada o inalámbrica, sin que ello importe al resultado de la operación o dificulte este proceso.
-	\item En cada nueva versión del sistema operativo, deberán incluirse las nuevas versiones tanto de la aplicación como del software de la \textbf{electrónica interna}.
+	\item En cada nueva versión del sistema operativo, deberán incluirse las nuevas versiones tanto de la aplicación como del software de la \textbf{electrónica interna} (que se manejaría íntegramente por la aplicación embebida y no ya por la distro en cuestión).
 \end{itemize}
+
+Vistas las necesidades del sistema de actualización, veamos ahora un diagrama de estados con el proceso:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{imagenes/statechart-actualizacion.png}
+	\caption{Diagrama de estados del proceso de actualización}
+	\label{statechart-actualizacion}
+\end{figure}
+
+Una vez definido a petición un período de comprobación de versiones, el cliente se mantendrá a la espera hasta que dicho período se dispare; entonces realizará mediante HTTPS una consulta al servidor, quien le responderá si existe una versión nueva o no.\\
+
+Si no la hay, el cliente vuelve a \textit{``dormirse''}. De lo contrario, comienza la descarga en segundo plano del nuevo software; el cual es instalado en la partición inactiva.\\
+
+Una vez que el usuario da su aprobación mediante la interfaz de la aplicación, o bien cuando decide reiniciar/apagar voluntariamente; la partición marcada como ``activa'' deja de ser la primera. Esto ocasiona que el próximo arranque de la máquina se realice cargando el software más nuevo.\\
+
+Si se produce algún error que impide lanzar la \textit{nueva distro}, o por cualquier motivo no se consigue conectar con el servidor para notificar la actualización realizada, se considera errónea o fallida, volviendo a marcarse la partición antigua como activa y reiniciando al sistema de ficheros antiguo.
 
 \section{Requisitos no funcionales}
 
