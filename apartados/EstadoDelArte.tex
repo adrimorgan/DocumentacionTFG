@@ -47,7 +47,7 @@ Una vez vistas algunas implementaciones de la tecnología, dado el propósito de
 Antes de hablar de sistemas operativos empotrados, debemos concretar la idea de ``dispositivo embebido'' (o \textit{dedicado}) como tal. Para \textit{Jean Paul Calvez}, consiste en lo siguiente:
 
 \begin{quotation}
-	``Un sistema dedicado quiere decir que éste es desarrollado para satisfacer una necesidad muy concreta en un momento dado. Su límite de operatividad está definido en varios años o décadas, por lo que la durabilidad es importante. El sistema debería ser \textit{lo más perfecto posible}, siendo lanzado en su versión final con tecnologías actuales. Sus posibilidades de futuro desarrollo están limitadas a unas pocas mejoras para la misma aplicación. Por lo tanto, ni se trata de un ordenador de propósito general ni de un prototipo que funciona bien solo en un momento concreto. [...] La técnica implementada ha de ser correcta y adecuada para reducir costes y tiempo de desarrollo.'' - \textit{Jean Paul Calvez} \cite{embedded-real-time-systems-embedded-systems}
+	``Un sistema dedicado quiere decir que éste es desarrollado para satisfacer una necesidad muy concreta en un momento dado. Su límite de operatividad está definido en varios años o décadas, por lo que la durabilidad es importante. El sistema debería ser \textit{lo más cercano a la perfección posible}, siendo lanzado en su versión final con tecnologías actuales. Sus posibilidades de futuro desarrollo están limitadas a unas pocas mejoras para la misma aplicación. Por lo tanto, ni se trata de un ordenador de propósito general ni de un prototipo que funciona bien solo en un momento concreto. [...] La técnica implementada ha de ser correcta y adecuada para reducir costes y tiempo de desarrollo.'' - \textit{Jean Paul Calvez} \cite{embedded-real-time-systems-embedded-systems}
 \end{quotation}
 
 Entre las técnicas de implementación se encuentran el uso de sistemas completos (como microcomputadores, terminales o sistemas de procesamiento de imágenes) en contraposición al uso conjunto de placas de desarrollo, fuentes de alimentación y placas con microprocesador entre otras herramientas.\\
@@ -58,15 +58,29 @@ En cuanto a hardware suele darse el caso de \textbf{la reutilización}, no ya en
 
 Por una parte, los dispositivos embebidos están teniendo un gran crecimiento dadas las mejoras computacionales de rendimiento y consumo, permitiendo desarrollar sistemas aislados que desempeñan funciones muy específicas, como recopilar datos y transmitirlos (como una granja de dispositivos que implementan el protocolo \textit{ZigBee} \cite{zigbee-products}), o actuar de entorno multimedia para diversos fines (como los sistemas de navegación automovilísticos inteligentes, a menudo programados utilizando \textit{Qt Automotive Suite} \cite{qt-automotive}).\\
 
-Principalmente, estos productos se desarrollan a partir de un \textbf{ordenador de placa reducida} (en inglés: \textit{Single Board Computer}, o \textit{SBC}); como lo son la \textit{Raspberry Pi} \cite{raspberry-pi}, la \textit{Tinker Board} de \textit{ASUS} \cite{asus-tinkerboard} o \textit{Arduino} en sus diferentes versiones \cite{arduino-store}. O bien, el equipo encargado de desarrollar el producto puede optar por diseñar una placa a medida que satisfaga las necesidades del proyecto. Para ésto, es necesaria una gran estimación de las ventajas con respecto al precio, y un desarrollo de software muy estrechamente ligado al del hardware.\\
+\subsection{Infraestructura física y virtual}
 
-Ahora bien, sobre estas plataformas hardware se pueden utilizar diferentes sistemas operativos, dando prioridad a la elaboración de uno propio a partir de diversas herramientas (como \textit{OpenEmbedded/Yocto Project} \cite{yocto-project}, \textit{Buildroot} \cite{buildroot} o \textit{Linux from scratch} \cite{linux-from-scratch}); ya que aseguran una mayor modularidad y ligereza en cuanto a dependencias (no se instala nada que no sea necesario). Estas tecnologías suelen ser de código abierto, libres y gratuitas, aunque existen alternativas diferentes más específicas para este tipo de desarrollos. Por ejemplo, existe \textbf{\textit{Qt for Device Creation} (Qt para creación de dispositivos embebidos)}, que se basa en el \textit{Proyecto Yocto} incorporando las dependencias necesarias para lanzar de forma automática una aplicación embebida desarrollada con el conocido marco de trabajo Qt.
+Aunque en los sistemas dedicados se constituye un ente final como un solo elemento, en cualquier sistema informático tenemos que discernir entre \textit{hardware} y \textit{software}. Veamos las herramientas y tendencias actuales separando dichos apartados:
 
-\begin{quotation}
-	``En cuanto a Linux embebido, \textit{Qt for Device Creation} provee del stack \textit{Boot to Qt} (arranca en Qt). Es un stack de software ligero y optimizado con Qt para sistemas Linux embebidos que es instalado directamente en el dispositivo de destino. Provee de una serie de herramientas requeridas para un desarrollo más rápido y un menor tiempo de puesta en el mercado'' - \textit{Qt Documentation} \cite{qt-device-creation}
-\end{quotation}
+\subsubsection{Plataforma hardware}
 
-Se trata de una alternativa comercial interesante para empresas dedicadas a este tipo de desarrollos, aunque no es nada asequible para estudiantes o programadores que no deseen una licencia comercial, ni para empresas pequeñas o \textit{start-ups} dado que el coste es muy elevado.\\
+Como sabemos, se trata de la parte física (placas base, microprocesadores y memorias de todo tipo, entre otros muchos componentes). En los sistemas informáticos de este tipo se plantea la alternativa de utilizar sistemas ya existentes o desarrollar uno \textit{``casero''} para el producto, pero para este último caso es necesaria una gran estimación de las ventajas con respecto al precio, y un desarrollo de software muy estrechamente ligado al del hardware.\\
+
+Principalmente, este tipo de productos dedicados se desarrollan a partir de un \textbf{ordenador de placa reducida} (en inglés: \textit{Single Board Computer}, o \textit{SBC}); dado que producen un ahorro enorme tanto en costes como en tiempo.\\
+
+Entre el populoso grupo de placas SBC, encontramos la \textit{Raspberry Pi} \cite{raspberry-pi}, la \textit{Tinker Board} de \textit{ASUS} \cite{asus-tinkerboard} o \textit{Arduino} en sus diferentes versiones \cite{arduino-store}. Dotan de unos precios muy asequibles y de una comunidad muy numerosa.\\
+
+Concentran todos los componentes necesarios de un ordenador, por lo que basta con conectarles una tarjeta de memoria con algún sistema operativo instalado para ponerlas a funcionar.\\
+
+\subsubsection{Sistemas operativos dedicados y aplicaciones}
+
+Ahora bien, sobre estas plataformas hardware se pueden utilizar diferentes sistemas operativos, dando prioridad a la elaboración de una distribución propia de GNU/Linux a partir de diversas herramientas (como \textit{\textbf{OpenEmbedded/Yocto Project}} \cite{yocto-project}, \textit{\textbf{Buildroot}} \cite{buildroot} o \textit{\textbf{Linux from scratch}} \cite{linux-from-scratch}). Permiten generar sistemas basados en GNU/Linux utilizando programas y componentes software ya implementados y compartidos con la comunidad. Aseguran una gran modularidad y ligereza en cuanto a dependencias (no se instala nada que no sea necesario o requerido por el usuario final). Hablaremos de estas alternativas más adelante.\\
+
+Estas tecnologías suelen ser de código abierto, libres y gratuitas, aunque existen alternativas diferentes más específicas para este tipo de desarrollos. Por ejemplo, existe \textbf{\textit{Qt for Device Creation} (Qt para creación de dispositivos embebidos)}, que se basa en el \textit{Proyecto Yocto} incorporando las dependencias necesarias para lanzar de forma automática una aplicación embebida desarrollada con el conocido marco de trabajo Qt \cite{qt-device-creation}.\\
+
+Se trata de un stack de software ligero para sistemas GNU/Linux embebidos, que constituye una imagen completa (basándose en Yocto) para ser instalada directamente en el dispositivo final. Provee de herramientas para un desarrollo rápido y un menor tiempo de puesta en el mercado.\\
+
+Es una alternativa comercial interesante para empresas dedicadas a este tipo de desarrollos, aunque no es nada asequible para estudiantes o programadores que no deseen una licencia comercial, ni para empresas pequeñas o \textit{start-ups} dado que el coste es muy elevado.\\
 
 \subsection{Sistemas de gestión de actualizaciones actuales}
 
@@ -103,8 +117,16 @@ Douglass propone el uso del lenguaje \textit{UML (Unified Modelling Language, o 
 
 \section{Problemas que se desean resolver}
 
-La solución planteada por este proyecto tiene que ver con la necesidad de un sistema operativo embebido para un uso específico, en contraposición a sistemas ya existentes que incorporan paquetes innecesarios para este fin o permiten una mucho menor customización (como lo son \textit{Raspbian} \cite{raspbian}, \textit{Windows 10 IoT} \cite{windows-10-iot} o \textit{Ubuntu Mate} \cite{ubuntu-mate-raspberry} entre otros). Esto permitirá sufrir un \textbf{menor tiempo de arranque} además de disponer de \textbf{detalles estéticos} (como la no inclusión de mensajes del kernel durante su carga y la muestra de una imagen a lo largo del proceso). Todas las decisiones tomadas para este fin se habrán hecho pensando en la mayor conveniencia para el proyecto DYNAsystem.\\
+La solución planteada por este proyecto tiene que ver con la necesidad de un sistema operativo embebido para un uso específico, en contraposición a sistemas ya existentes que incorporan paquetes innecesarios para este fin o permiten una mucho menor customización (como lo son \textit{Raspbian} \cite{raspbian}, \textit{Windows 10 IoT} \cite{windows-10-iot} o \textit{Ubuntu Mate} \cite{ubuntu-mate-raspberry} entre otros).\\
 
-Por otro lado, el sistema de actualizaciones juega \textbf{un papel muy importante} en este proyecto, dado que intenta romper con el paradigma de actualizaciones \textit{OTA} a través de conexión a Internet cableada, permitiendo desplegar nuevas versiones del software \textbf{de forma inalámbrica y segura} a través de un servidor centralizado. Para ello, se habrán valorado los diferentes servicios de actualización y se habrá tomado una decisión de inclusión en el proyecto.
+Una distribución más ligera permitirá sufrir un \textbf{menor tiempo de arranque} además de disponer de \textbf{detalles estéticos personalizados} (como la no inclusión de mensajes del kernel durante su carga y la muestra de una imagen a lo largo del proceso). Todas las decisiones tomadas para este fin se habrán hecho pensando en la mayor conveniencia para el proyecto DYNAsystem.\\
+
+La generación de esta nueva distribución tendrá como premisa la inclusión de dicho sistema ligero y personalizable a medida de la compañía en el producto, en contraposición a las distribuciones ya existentes.\\
+
+Por otro lado, el sistema de actualizaciones juega \textbf{un papel muy importante} en este proyecto, dado que intenta romper con el paradigma de actualizaciones \textit{OTA} a través de conexión a Internet cableada, permitiendo desplegar nuevas versiones del software \textbf{de forma inalámbrica y segura} a través de un servidor centralizado.\\
+
+Además, el proyecto rompe con la idea de muchas empresas de generar sus propios sistemas gestores de actualizaciones caseros, lo que además de generar costes extra por la necesidad de un mantenedor dentro de la empresa, hace que el desarrollo se ralentice mucho hasta que dicho sistema gestor está listo y testado para lanzarse al mercado.\\
+
+Por lo tanto, otro problema que se desea resolver con el proyecto es la integración de la nueva distribución con un gestor de actualizaciones dedicado ya existente.
 
 \newpage
