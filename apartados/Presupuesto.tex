@@ -1,0 +1,30 @@
+\chapter{Presupuesto del proyecto}
+
+Pasemos ahora a realizar una estimación lo más acertada posible del coste de implantación del proyecto. Independientemente de haber sido pensado para su integración con DYNAsystem, el contenido desarrollado podría aprovecharse para su uso en otro tipo de sistemas dedicados, modificando tan solo la imagen de carga y la aplicación embebida (u otras cosas, si se quiere). Finalmente, haremos la distinción presupuestaria de lo que supone para una empresa (o desarrollador) llevar a cabo el proyecto en cuanto a \textbf{producción}, y por otro lado el que sería un precio justo de venta al público.\\
+
+Empecemos por la parte física, \textbf{el hardware final}, que aunque proporcionalmente apenas supone coste merece una apreciación:
+
+\begin{itemize}
+	\item Por un lado tenemos el \textbf{computador de placa reducida}. En este caso se trata de la ya tan mentada \textit{Raspberry Pi} aunque podría adaptarse a otra placa. Los argumentos por los que se decidió desarrollar un sistema embebido sobre este tipo de dispositivos fue por \textbf{consumo}, en contraposición a las prestaciones; y \textbf{precio}, dado que esta gama suele oscilar siempre en torno a los \textbf{30-40€} \cite{raspberry-pi-amazon} y cumple nuestras necesidades de rendimiento sin problema.
+	\item Por otro lado, necesitaremos una \textbf{tarjeta de memoria} en formato \textit{Micro SD} donde instalar el sistema operativo. Aquí las restricciones no vendrán dadas por el tamaño, dado que la imagen completa ocupa poco más de 400 MiB; sino por \textbf{la velocidad}, que repercutirá directamente en la lectura de datos en la carga del sistema. Con una de estas memorias de la clase 10 (mínimo 10 MB/s) bastaría sin problema. En cuanto al rango de precios, nos moveremos entre los \textbf{5 y 12€} según el tamaño que elijamos, aunque no sea necesario en su totalidad.
+\end{itemize}
+
+Esto concluye con que tendríamos la infraestructura física final por \textbf{cerca de 50€}.\\
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\
+
+Por otro lado, aunque no se incluye dentro del final, una parte de hardware necesaria para llevar a cabo el proyecto será el centro de trabajo donde el ingeniero desarrolle el sistema (es decir, el ordenador con el que se realizarán las compilaciones). En cualquiera de los componentes a mentar podría incrementarse el precio si buscamos un resultado por encima de la media, pero en cuanto a gamas estándar y en base al mercado actual, estimemos de forma muy genérica la cifra necesaria:
+
+\begin{itemize}
+	\item Para empezar, el monitor. Sin ser demasiado exquisitos, partiendo de uno de 24 pulgadas con resolución FullHD y un resultado más que correcto, el precio partiría de \textbf{130-140€} \cite{monitor-samsung-pccom}, llegando a 300 si se buscase una configuración con doble monitor, o uno solo con mayores resoluciones y tamaños.
+	\item Por otro lado, el ordenador en sí. El ingeniero no necesitará realizar cómputos relacionados con gráficos sino que hará un gran desempeño del procesador y de la memoria (tanto volátil como persistente). Para esto, un procesador Intel i5 o i7 acompañado de 8 GiB de memoria RAM y 2 TiB de disco duro serían más que suficientes. Esta configuración sumaría \textbf{750-800€} al total \cite{ordenador-sobremesa-pccom}.
+	\item Para terminar con las herramientas necesarias, un combo de teclado y ratón, que en una gama estándar podría conseguirse por \textbf{20€} (o hasta \textbf{60} si buscamos un resultado más profesional con teclados mecánicos, inalámbricos o retroiluminados) \cite{combo-teclado-logitech-pccom}.
+\end{itemize}
+
+Finalmente, la estación de trabajo del desarrollador tendría un coste de entre \textbf{1.000} y \textbf{1.300€} para un caso genérico.\\
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\
+
+Visto esto, 
+
+\newpage

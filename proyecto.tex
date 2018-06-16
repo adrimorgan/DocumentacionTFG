@@ -1,0 +1,84 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment LaTeX Template Version 1.0 (5/5/12)
+% This template has been downloaded from: http://www.LaTeXTemplates.com
+% Original author:  Frits Wenneker (http://www.howtotex.com)
+% License: CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[paper=a4, fontsize=11pt]{book} % A4 paper and 11pt font size
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[utf8]{inputenc}
+\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage{listings} % para insertar código con formato similar al editor
+\usepackage[spanish, es-tabla]{babel} % Selecciona el español para palabras introducidas automáticamente, p.ej. "septiembre" en la fecha y especifica que se use la palabra Tabla en vez de Cuadro
+\usepackage{url} % ,href} %para incluir URLs e hipervínculos dentro del texto (aunque hay que instalar href)
+\usepackage{graphics,graphicx, float} %para incluir imágenes y colocarlas
+\usepackage[gen]{eurosym} %para incluir el símbolo del euro
+\usepackage{cite} %para incluir citas del archivo <nombre>.bib
+\usepackage{enumerate}
+\usepackage{csquotes}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,	% false: boxed links; true: colored links
+	breaklinks,
+	citecolor=black,
+	linkcolor=black,	% color of internal links
+	urlcolor=black		% color of external links
+}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LO]{\leftmark}
+\fancyhead[RE]{\rightmark}
+\fancyhead[RO,LE]{\textbf{\thepage}}
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\begin{document}
+
+	% Plantilla portada UGR
+	\input{portada/portada}
+	
+	% Plantilla prefacio UGR
+	\input{prefacio/prefacio}
+	\newpage
+	
+	% Índice de contenidos
+	\tableofcontents
+	\newpage
+
+	% Índice de imágenes y tablas
+	\listoffigures
+	\newpage
+	
+	% Introducción: resumen e implementación para la empresa
+	\input{apartados/Introduccion}
+	
+	% Estado del arte: situación actual de la tecnología, problemas que se desean resolver con el proyecto. Dispositivos embebidos. Definición, características y necesidades.
+	\input{apartados/EstadoDelArte}
+	
+	% Planteamiento del problema: descripción, requisitos del producto, historia, contexto actual, estado del arte
+	\input{apartados/Planteamiento}
+	
+	% Análisis de requisitos. Estimación de las funcionalidades mínimas y extras (rendimiento, seguridad, disponibilidad, estética). Casos de uso, actores.
+	\input{apartados/Analisis}
+	
+	% Alternativas para cada problema y soluciones tomadas al respecto
+	\input{apartados/Soluciones}
+	
+	% Distribución propia de GNU/Linux basada en Yocto Project. Puesta a punto del proyecto, enumeración de las tareas para satisfacer los requisitos.
+	\input{apartados/ConfiguracionYocto}
+	
+	% Presupuesto del proyecto completo para propósito general.
+	\input{apartados/Presupuesto}
+	
+	% Conclusión del proyecto
+	\input{apartados/Conclusion}
+	
+	\newpage
+	\bibliography{citas}
+	\bibliographystyle{plain}
+	
+\end{document}
