@@ -1,36 +1,65 @@
 \chapter{Decisiones y soluciones}
 
-El primer motivo que me animó a adentrarme en este proyecto fue mi experiencia con muchas distribuciones de Linux adquirida a lo largo de la carrera. Siempre me ha gustado instalarlas en mi ordenador para probarlas, luego desinstalarlas y pasar a probar otras nuevas. Pasar por eso me ha obligado a lidiar con gestores de arranque, administradores de paquetes, configuraciones de sistemas de ficheros y discos en RAID, etc. Gracias a esto, he podido ver con soltura y abstracción las diferentes piezas de este puzzle llamado \textit{``Meta-DYNAsystem''}, aplicando mis conocimientos previos para desarrollar un sistema lo más robusto posible, por lo que una vez vistos los requisitos del proyecto, podemos pasar a valorar las decisiones tomadas y las soluciones propuestas frente a éstos. Ya venimos hablando largo y tendido sobre dispositivos embebidos, pero es ahora cuando hablaremos de las alternativas elegidas para infraestructura física, herramientas de desarrollo del sistema operativo, y por supuesto del gestor de actualizaciones.
+Una vez están claros los requisitos y se les ha realizado un análisis para su posterior implementación, podemos empezar a comentar las decisiones tomadas y las soluciones implementadas.\\
 
-\section{Computador de placa reducida elegido}
+Pero antes, cabe decir que el principal motivo que me animó a adentrarme en este proyecto fue mi experiencia con muchas distribuciones basadas en GNU/Linux adquirida a lo largo de la carrera. Siempre me ha gustado instalarlas en mi ordenador para probarlas, luego desinstalarlas y pasar a probar otras nuevas. Pasar por eso me ha obligado a lidiar con gestores de arranque, administradores de paquetes, configuraciones de sistemas de ficheros y entornos de escritorio, entre otras cosas.\\
 
-Al principio del desarrollo, la empresa propuso utilizar la \textit{Raspberry Pi} descrita previamente (en su versión \textit{3 Model B}, la más avanzada del momento \cite{raspberry-pi-3-model-b}), dado que los dos ingenieros electrónicos que trabajan allí ya la habían utilizado para algunos proyectos y disponían de algunas unidades allí en la oficina. Sin embargo, en todo momento tuve voz y voto en la decisión para plantear alguna otra alternativa. Finalmente, decidimos seguir adelante con ella por diversas razones que comentaremos tras mencionar sus prestaciones:
+Gracias a esto, he podido ver con soltura y abstracción las diferentes piezas de este puzzle llamado \textit{``Meta-DYNAsystem''}, aplicando mis conocimientos previos para desarrollar un sistema lo más robusto posible.\\
+
+Ya venimos hablando largo y tendido sobre dispositivos embebidos, pero es ahora cuando hablaremos de las alternativas elegidas para infraestructura física y virtual, las herramientas de desarrollo de la distribución, y por último del gestor de actualizaciones.
+
+\section{Infraestructura física elegida}
+
+Como anticipábamos en el estado del arte, existen diferentes posibilidades en un proyecto a la hora de desarrollar una infraestructura física que abastezca a un sistema informático:\\
+
+-- Por ejemplo, podríamos optar por montar un ordenador de sobremesa de formato convencional e instalar ahí la infraestructura virtual; dotándola de unas mayores capacidades computacionales, a expensas del precio.\\
+
+-- O por otro lado, encontramos la opción de utilizar un computador \textit{SBC} de los ya mencionados; lo que ajustaría mucho el precio de coste disminuyendo también la potencia máxima del sistema.\\
+
+Para empezar, como comentamos en la descripción del problema, la empresa tenía como premisa reducir los precios de coste del producto original, que llevaba instalado un ordenador convencional en formato \textbf{\textit{Mini-ITX}}.
+
+\begin{quotation}
+	\textit{Mini-ITX} es un formato de placa base para ordenadores compactos. Fue desarrollado de forma propietaria por la compañía \textit{VIA Technologies}, desencadenó un gran uso de este formato y posteriormente sus especificaciones pasaron a ser libres \cite{via-mini-itx}.
+\end{quotation}
+
+Por una parte, el computador integrado en la máquina antigua disponía de una buena escalabilidad, dado que poseía unas buenas prestaciones. Sin embargo, dichas prestaciones \textbf{no eran necesarias}. Para un sistema dedicado con una sola aplicación embebida, podía utilizarse un ordenador más ajustado tanto en rendimiento como en precio.\\
+
+Por tanto, se pensó en utilizar un computador de placa reducida. Al principio del desarrollo, la empresa propuso utilizar la \textit{Raspberry Pi} descrita previamente (en su versión \textit{3 Model B}, la más avanzada del momento en ese entonces \cite{raspberry-pi-3-model-b}), dado que los dos ingenieros electrónicos que trabajan allí ya la habían utilizado para algunos proyectos y disponían de algunas unidades allí en la oficina. Sin embargo, en todo momento tuve voz y voto en la decisión para plantear alguna otra alternativa.\\
+
+Finalmente, decidimos seguir adelante con ella por diversas razones:
+
+\subsubsection{Relación calidad/precio}
+
+Este suele ser un factor de éxito por el que las SBC's han ganado popularidad a lo largo de los años, dado que ofrecen unas prestaciones más que adecuadas para proyectos dedicados ajustando mucho el precio de coste. Las especificaciones son comedidas pero suficientes para un sistema de archivos ligero y aplicaciones sin demasiados requisitos gráficos.\\
+
+Podemos encontrar este tipo de placas por un precio de \textbf{30-40€}, con configuraciones de cuatro núcleos y 1-2 GiB de RAM. Suelen disponer de arquitectura \textit{ARM} en el procesador e incluyen GPU (unidad de procesamiento de gráficos) cuya memoria es tomada de la RAM.\\
+
+Pese a tener estas especificaciones limitadas, provee de todas las conexiones necesarias para el proyecto (puertos USB, salida HDMI, conexión inalámbrica Wifi+Bluetooth ya integradas y hasta el puerto de conexión LAN). Esto hace que suponga una forma más que interesante de ahorrar costes de manufactura.\\
+
+\subsubsection{Popularidad y comunidad de usuarios}
+
+Aunque a igualdad de precio podríamos haber considerado algunas placas diferentes con las mismas especificaciones, lo que terminó de decantar la balanza por la Raspberry fue principalmente la popularidad que posee, así como la amplia comunidad de gente que utiliza estos dispositivos. Esto parece sentenciar que ni el fabricante va a irse a pique, ni se van a encontrar errores en el desarrollo que no haya sufrido ya algún internauta. Es decir, se facilita mucho la búsqueda de ayuda ante posibles errores.\\
+
+Por otro lado, de esta popularidad deriva el grado de soporte para algunos marcos de trabajo. Por ejemplo, \textit{Yocto Project} tiene un alto número de librerías disponibles para desarrollar sistemas embebidos para la Raspberry. Y por otro lado, dada esta popularidad el equipo de desarrollo de la herramienta de actualizaciones \textit{Mender} reconoce a esta placa como su dispositivo de referencia \cite{mender-raspberry-pi} (hablaremos de esto más adelante).
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\linewidth]{imagenes/Pi3+Breakout+Feb+29+2016.png}
-	\caption{Especificaciones técnicas de la RPi 3 B - Element 14 \cite{raspberry-pi-3-model-b-specs}}
+	\includegraphics[width=0.9\linewidth]{imagenes/Pi3+Breakout+Feb+29+2016.png}
+	\caption{Especificaciones técnicas y conexiones físicas de la Raspberry Pi 3 modelo B - Element 14 \cite{raspberry-pi-3-model-b-specs}}
 	\label{rpi3-b-specs}
 \end{figure}
 
-Lógicamente, tratándose de un computador de placa reducida viste unas especificaciones bastante comedidas en cuanto a computación (con una CPU y una memoria RAM moderadas). Sin embargo, provee de todas las conexiones necesarias para el proyecto (puertos USB, salida HDMI, conexión inalámbrica Wifi+Bluetooth ya integradas y hasta el puerto de conexión LAN). Esto hace que suponga una forma más que interesante de ahorrar costes de manufactura.
+\section{Desarrollo del sistema operativo}
 
-\begin{itemize}
-	\item \textbf{Relación calidad/precio y necesidades del proyecto:} en el mercado existen alternativas realmente potentes en cuanto a este tipo de placas. Por ejemplo, la empresa \textbf{\textit{HardKernel}} comercializa las placas \textit{\textbf{Odroid}}, de diferentes gamas de potencia y distintos precios \cite{odroid-products}. Suponen una alternativa interesante, pero para las necesidades de computación tan bajas que requiere el proyecto no es necesario el aumento de precio.
-	\item \textbf{Popularidad y comunidad:} aunque a igualdad de precio podríamos haber considerado algunas placas diferentes con las mismas especificaciones, lo que terminó de decantarnos por la Raspberry fue principalmente la popularidad que posee, así como la amplia comunidad que utiliza estos dispositivos. Esto parece sentenciar que ni el fabricante va a irse a pique, ni se van a encontrar errores en el desarrollo que no haya sufrido ya algún internauta. Es decir, se facilita mucho la búsqueda de ayuda ante posibles errores.\\
-	
-	Por otro lado, de esta popularidad deriva el grado de soporte para algunos marcos de trabajo. Por ejemplo, \textit{Yocto Project} tiene un alto número de librerías disponibles para desarrollar sistemas embebidos para la Raspberry. Y por otro lado, la herramienta de actualizaciones \textit{Mender} reconoce a esta placa como su dispositivo de referencia \cite{mender-raspberry-pi} (hablaremos de esto más adelante).
-\end{itemize}
+Una vez que hemos hablado sobre placas reducidas y microcomputadores, definamos los paquetes de soporte necesarios (\textbf{\textit{BSP, Board Support Packages}}), ya que nos cruzaremos con este término cada vez que queramos desarrollar un sistema operativo basado en una placa específica; y mejor aún, nos permitirá portar un sistema prácticamente idéntico de una arquitectura a otra.\\
 
-\section{Herramientas de desarrollo del sistema operativo}
+Según \textit{Tammy Noergaard} y \textit{Jean Labrosse} \cite{embedded-software-know-it-all-bsp}, se trata de un componente opcional integrado por el proveedor en el sistema operativo, y cuyo propósito principal es proveer de una capa de abstracción entre el sistema operativo y los drivers de dispositivo genéricos.\\
 
-Una vez que hemos hablado sobre placas reducidas y microcomputadores, definamos los paquetes de soporte necesario (\textbf{\textit{BSP, Board Support Packages}}), ya que nos cruzaremos con este término cada vez que queramos desarrollar un sistema operativo basado en una placa específica; y mejor aún, nos permitirá portar un sistema prácticamente idéntico de una arquitectura a otra. Como vemos en el libro \textit{EMBEDDED SOFTWARE | know it all} \cite{embedded-software-know-it-all}, de diversos autores, significa lo siguiente:
-
-\begin{quotation}
-	``Es un componente opcional entregado por el proveedor del sistema operativo, cuyo propósito principal es proveer de una capa de abstracción entre el sistema operativo y los drivers de dispositivo genéricos. [...] Un \textit{BSP} provee de subrutinas a las capas superiores de software que pueden customizar el hardware, además de proveer flexibilidad en tiempo de compilación. [...] Incluye características de dispositivo de arquitecturas específicas, como modos del procesador, tabla de interrupciones y control de registros.'' - \textit{Tammy Noergaard, Jean Labrosse} \cite{embedded-software-know-it-all-bsp}
-\end{quotation}
+Un \textit{BSP} provee de llamadas al sistema a las capas superiores (las de software) para abstraerlas de los modos del procesador, las tablas de interrupciones y el control de registros.\\
 
 Estos paquetes de soporte nos facilitarán enormemente el desarrollo de un sistema operativo para una placa específica como la Raspberry Pi. En el caso de que una empresa quisiera desarrollar todos los aspectos de un sistema empotrado, incluyendo el apartado hardware, los ingenieros electrónicos harían bien en facilitar un \textit{BSP} a los desarrolladores de aplicaciones embebidas que trabajen en el proyecto; dada la facilidad y el ahorro de tiempo que supondrían.\\
+
+\subsection{Elección de la infraestructura software}
 
 En este punto, dejé de tener influencia por parte de la empresa, ya que era el único con conocimientos profundos de Linux y era el responsable de valorar las alternativas. No eran demasiadas, ya que las únicas interesantes que encontré fueron \textit{el Proyecto Yocto} (\textit{derivado de Open Embedded}), del que ya venimos hablando; y \textit{Buildroot}.\\
 

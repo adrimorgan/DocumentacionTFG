@@ -52,18 +52,30 @@ Ahora bien, pasemos a ver por otro lado los requerimientos relacionados con las 
 	\item Por otro lado, en el apartado \textbf{estético} y pensando en la \textit{computación ubica moderna}, es de imperativa necesidad que el sistema no muestre al usuario los mensajes de la carga que se esté produciendo, ni un modo \textit{línea de comandos} de ningún tipo, de forma que la interfaz sea \textbf{lo más natural posible}. Para ello, deberá modificarse el \textit{bootloader} del computador elegido para que silencie estos mensajes de la salida estándar; además de incluir por otro lado el sistema un servicio que imprima una imagen a pantalla completa, que será reemplazada por la aplicación.
 \end{itemize}
 
-\section{Actores}
-
 Una vez vistos los requerimientos y funcionalidades necesarias del proyecto, pasemos ahora a enumerar y describir los actores involucrados en la vida de dicho producto.
 
-\begin{quotation}
-	\texttt{``Un actor no es más que un objeto fuera del ámbito del sistema bajo estudio, pero que tiene una interacción significativa con él. [...] Mucha gente malentiende que los actores deben ser usuarios humanos del sistema.''} - \textit{Bruce Powel Douglass} \cite{real-time-uml-use-cases}
-\end{quotation}
+\section{Actores}
 
-\begin{itemize}
-	\item \textbf{Usuario normal \textit{(o cliente)}:} es aquel que adquiere la máquina DYNAsystem (o la utiliza en algún gimnasio o centro). Su actuación con respecto a la máquina desde el punto de vista del sistema operativo será sencilla, ya que él simplemente llegará al dispositivo, lo encenderá y visualizará una imagen de carga hasta que aparezca la aplicación embebida, con la que podrá trabajar. Sin embargo, a lo largo de este uso utilizará indirectamente funcionalidades provistas por el sistema operativo, como la reproducción de sonidos indicativos, el guardado de datos a través de USB o la conexión WiFi. Todos estos servicios deberán ser satisfechos por el sistema.
-	\item \textbf{Programador(es) de la aplicación embebida:} aunque no participan en este proyecto (\textit{``Meta-DYNAsystem''}), para modularizar tareas y que el sistema operativo siga un desarrollo independiente será necesario el proceso de creación de la aplicación embebida por otro lado, llevado a cabo por el número de personas que la compañía estime necesarias.
-	\item \textbf{Administrador(es) del sistema operativo:} será aquel encargado de analizar, programar y compilar las nuevas versiones del sistema operativo, empaquetando las versiones de la aplicación embebida y el resto del software que se necesite incluir. Para el caso que nos ocupa, dicho puesto lo conformo yo.
-\end{itemize}
+Según \textit{Bruce Powel Douglass}, un actor no es más que un objeto (no ya siempre usuarios humanos) fuera del ámbito del sistema bajo estudio, pero que tiene una interacción directa con él \cite{real-time-uml-use-cases}. Por tanto, deberemos ser conscientes de todos los elementos involucrados en el desempeño del proyecto:
 
+\subsubsection{Usuario normal (cliente)}
+
+Es aquel que adquiere la máquina DYNAsystem (o la utiliza en algún gimnasio o centro). Su actuación con respecto a la máquina desde el punto de vista del sistema operativo será sencilla, ya que él simplemente llegará al dispositivo, lo encenderá y visualizará una imagen de carga hasta que aparezca la aplicación embebida, con la que podrá trabajar. Sin embargo, a lo largo de este uso utilizará indirectamente funcionalidades provistas por el sistema operativo, como la reproducción de sonidos indicativos, el guardado de datos a través de USB o la conexión WiFi. Todos estos servicios deberán ser satisfechos por el sistema.
+
+\subsubsection{Programador(es) de la aplicación embebida}
+
+Aunque no participan directamente en esta parte del proyecto (\textit{Meta-DYNAsystem}), para modularizar tareas y que la distribución GNU/Linux siga un desarrollo independiente será necesario el proceso de creación de la aplicación embebida por otro lado, llevado a cabo por el número de personas que la compañía estime necesarias.\\
+
+Estos serán los encargados de abstraerse del sistema Linux y utilizar los módulos provistos por este (de gestión de interfaces de red y de discos, principalmente).
+
+\subsubsection{Administrador(es) del sistema operativo}
+
+Será aquel encargado de analizar, programar y compilar las nuevas versiones del sistema operativo, empaquetando las versiones de la aplicación embebida y el resto del software que se necesite incluir. Para el caso que nos ocupa, dicho puesto lo conformo yo.
+
+\subsubsection{Servidor de actualizaciones}
+	
+Será el ordenador donde se centralizará todo el servicio de actualizaciones. En este deberán alojarse las imágenes compiladas y será con el que se comuniquen las máquinas (a modo de cliente) para consultar la existencia de nuevas versiones de software.\\
+
+Dependiendo de la implementación del sistema, podrá estar situado en la oficina de la empresa o subcontratado a alguna otra compañía dedicada a la oferta de este tipo de servicios.
+	
 \newpage
