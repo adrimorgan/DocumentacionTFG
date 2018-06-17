@@ -1,11 +1,11 @@
 \chapter{Presupuesto del proyecto}
 
-Pasemos ahora a realizar una estimación lo más acertada posible del coste de implantación del proyecto. Independientemente de haber sido pensado para su integración con DYNAsystem, el contenido desarrollado podría aprovecharse para su uso en otro tipo de sistemas dedicados, modificando tan solo la imagen de carga y la aplicación embebida (u otras cosas, si se quiere). Finalmente, haremos la distinción presupuestaria de lo que supone para una empresa (o desarrollador) llevar a cabo el proyecto en cuanto a \textbf{producción}, y por otro lado el que sería un precio justo de venta al público.\\
+Pasemos ahora a realizar una estimación lo más acertada posible del coste de implantación del proyecto. Independientemente de haber sido pensado para su integración con DYNAsystem, el contenido desarrollado podría aprovecharse para su uso en otro tipo de sistemas dedicados, modificando tan solo la imagen de carga y la aplicación embebida (y otras dependencias, si se quiere). Finalmente, haremos la distinción presupuestaria de lo que supone para una empresa (o desarrollador) llevar a cabo el proyecto en cuanto a \textbf{producción}, y por otro lado el que sería un precio justo de venta al público.\\
 
-Empecemos por la parte física, \textbf{el hardware final}, que aunque proporcionalmente apenas supone coste merece una apreciación:
+Empecemos por la parte física con \textbf{el hardware final}, que aunque proporcionalmente apenas supone coste merece una apreciación:
 
 \begin{itemize}
-	\item Por un lado tenemos el \textbf{computador de placa reducida}. En este caso se trata de la ya tan mentada \textit{Raspberry Pi} aunque podría adaptarse a otra placa. Los argumentos por los que se decidió desarrollar un sistema embebido sobre este tipo de dispositivos fue por \textbf{consumo}, en contraposición a las prestaciones; y \textbf{precio}, dado que esta gama suele oscilar siempre en torno a los \textbf{30-40€} \cite{raspberry-pi-amazon} y cumple nuestras necesidades de rendimiento sin problema.
+	\item Por un lado tenemos el \textbf{computador de placa reducida}. En este caso se trata de la ya tan mentada \textit{Raspberry Pi} aunque podría adaptarse a otra placa (cambiando algunos drivers específicos). Ya mencionamos que los argumentos por los que principalmente se decidió desarrollar un sistema embebido sobre este tipo de dispositivos fue por \textbf{consumo}, en contraposición a las prestaciones; y \textbf{precio}, dado que esta gama suele oscilar siempre en torno a los \textbf{30-40€} \cite{raspberry-pi-amazon} y cumple nuestras necesidades de rendimiento sin problema.
 	\item Por otro lado, necesitaremos una \textbf{tarjeta de memoria} en formato \textit{Micro SD} donde instalar el sistema operativo. Aquí las restricciones no vendrán dadas por el tamaño, dado que la imagen completa ocupa poco más de 400 MiB; sino por \textbf{la velocidad}, que repercutirá directamente en la lectura de datos en la carga del sistema. Con una de estas memorias de la clase 10 (mínimo 10 MB/s) bastaría sin problema. En cuanto al rango de precios, nos moveremos entre los \textbf{5 y 12€} según el tamaño que elijamos, aunque no sea necesario en su totalidad.
 \end{itemize}
 
@@ -13,7 +13,7 @@ Esto concluye con que tendríamos la infraestructura física final por \textbf{c
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\
 
-Por otro lado, aunque no se incluye dentro del final, una parte de hardware necesaria para llevar a cabo el proyecto será el centro de trabajo donde el ingeniero desarrolle el sistema (es decir, el ordenador con el que se realizarán las compilaciones). En cualquiera de los componentes a mentar podría incrementarse el precio si buscamos un resultado por encima de la media, pero en cuanto a gamas estándar y en base al mercado actual, estimemos de forma muy genérica la cifra necesaria:
+Por otro lado, aunque no se incluye dentro del final, una parte de hardware necesaria para llevar a cabo el proyecto será el centro de trabajo donde el ingeniero desarrolle el sistema (es decir, el ordenador con el que se realizarán las compilaciones). En cualquiera de los componentes a mentar podría incrementarse el precio si buscamos un resultado por encima de la media, pero en cuanto a gamas estándar y en base al mercado actual, estimemos de forma muy general la cifra necesaria:
 
 \begin{itemize}
 	\item Para empezar, el monitor. Sin ser demasiado exquisitos, partiendo de uno de 24 pulgadas con resolución FullHD y un resultado más que correcto, el precio partiría de \textbf{130-140€} \cite{monitor-samsung-pccom}, llegando a 300 si se buscase una configuración con doble monitor, o uno solo con mayores resoluciones y tamaños.
@@ -23,8 +23,30 @@ Por otro lado, aunque no se incluye dentro del final, una parte de hardware nece
 
 Finalmente, la estación de trabajo del desarrollador tendría un coste de entre \textbf{1.000} y \textbf{1.300€} para un caso genérico.\\
 
+Ahora bien, utilizando este hardware dedicará un número de horas de trabajo variable según las especificaciones del proyecto. Para este caso, podría estimarse una temporalidad de \textbf{1 a 2 meses de trabajo, para un contrato de 40 horas semanales}, y en función de su experiencia con \textit{Open Embedded} y \textit{Yocto Project}.\\
+
+Haciendo también una estimación del salario a tiempo completo del ingeniero (pongamos que oscila entre 1.200 y 1.800€), concluiríamos que el precio de coste total de producción sería el siguiente:
+
+\begin{quotation}
+	\textbf{Mínimo estimado\textit{}}: (1 mes) x (1.200€ de salario) + (1.000€ de ordenador) + (50€ de placa) = \textbf{2.250€}\\
+	
+	\textbf{Máximo estimado\textit{}}: (2 mes) x (1.800€ de salario) + (1.300€ de ordenador) + (50€ de placa) = \textbf{4.950€}
+\end{quotation}
+
+Como decimos, en esta cifra influyen muchas variables, desde el precio de los componentes hasta el salario del desarrollador, pero podemos fijar el intervalo del \textbf{precio de coste de producción entre 2.000 y 5.000€}. 
+
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\
 
-Visto esto, 
+Una vez que se tienen las herramientas de trabajo y una cierta mecanización del desarrollo por parte del ingeniero, podemos hacer números para estimar un Precio de Venta al Público correcto.\\
+
+Con las medidas precedentes ya tomadas, adaptar el desarrollo de un proyecto dado a otro distinto no requeriría rehacer muchas cosas, ya que las bases con \textit{Open Embedded/Yocto Project} son siempre las mismas; por lo que a petición de un cliente, se podría realizar el proyecto solicitado en un tiempo de \textbf{un mes a tiempo completo} (40 horas semanales).\\
+
+Tomemos la hora de trabajo de un ingeniero a un precio de venta de 50€, y hagamos la estimación del Precio de Venta al Público:
+
+\begin{quotation}
+	\textbf{P.V.P. estimado}: (40 horas) x (50€ cada hora) = \textbf{2.000€}
+\end{quotation}
+
+\textbf{2.000€} sería el precio estimado de venta al público de un proyecto basado en este para cada mes de trabajo dedicado.
 
 \newpage
