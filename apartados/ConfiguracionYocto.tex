@@ -83,19 +83,52 @@ Como vemos, los resultados vienen compuestos del nombre de los paquetes, las ver
 
 Como aconsejan en la propia documentación de Yocto, una vez que queremos pasar de hacer pruebas a confeccionar nuestro producto, lo idóneo es \textbf{crear un \textit{layer} propio} en el que alojar la configuración de forma aislada. Por ejemplo, en nuestro caso la capa usada recibe el nombre de \texttt{meta-dynasystem} y da nombre a este proyecto.\\
 
-Los pasos para crear un layer, descritos en la propia \textit{Wiki} de Yocto \cite{wiki-yocto-own-layer}, son sencillos. El proceso consiste básicamente en generar un par de carpetas y un archivo de configuración común al layer, describiendo las rutas internas a la capa y la prioridad de sus paquetes con respecto a los de otras.\\
+Los pasos para crear un layer, descritos en la propia \textit{Wiki} de Yocto \cite{wiki-yocto-own-layer}, son sencillos. El proceso consiste básicamente en generar un par de carpetas y un archivo de configuración común al layer (llamado \textit{layer.conf}), describiendo las rutas internas a la capa y la prioridad de sus paquetes con respecto a los de otras.\\
+
+Por otro lado, debemos saber que dentro de cada layer existirán distintos directorios 
+
+\begin{itemize}
+	\item \textbf{Configuración propia del layer \textit{(/conf)}}: el archivo necesario se aloja en la ruta antes mencionada \texttt{./conf/layer.conf}.
+	\item \textbf{Ficheros de clases \textit{(/classes)}}: las clases representan comportamientos específicos que pueden heredar las imágenes de sistema. Tienen extensión \texttt{.bbclass}.
+	\item \textbf{Recetas de paquetes de todo tipo \textit{(/recipes-X)}}: siendo ``X'' variable y reflejando el tipo de las recetas que se usan. Por ejemplo, los paquetes importantes o las imágenes suelen ser incluidas en una carpeta llamada \textbf{\textit{recipes-core}}; o las recetas relacionadas con Mender se agrupan en la carpeta \textbf{\textit{recipes-mender}}.
+\end{itemize}
+
+Dentro de estas carpetas de recetas encontraremos un directorio por cada paquete de la categoría. Comentemos esto en el siguiente apartado.\\
 
 \subsection{Paquetes, configuración y parches}
 
-Para terminar con la introducción a Yocto, cabe destacar la importancia de \textbf{los parches} (o \textit{patches} en inglés). Estos permitirán de una forma escalable y, sobre todo automatizada, modificar el comportamiento de las aplicaciones y programas libres ya presentes en los repositorios.\\
+Como hemos dicho anteriormente, encontramos una carpeta para cada paquete existente, con el mismo nombre del paquete. De forma interna a esta, podremos distinguir varios subdirectorios y archivos:
 
-Para entender el funcionamiento de los parches, veamos los estados por los que pasa un paquete por compilar:
+\begin{itemize}
+	\item \textbf{Archivos a incluir en el sistema \textit{(/files)}}: aquí se alojan ficheros de todo tipo que se quiere figuren en el sistema final asociados al paquete (scrips, documentos, etc.).
+	\item \textbf{Parches por aplicar al paquete \textit{(/patches)}}: comentaremos su función de forma más extensa en esta sección más adelante.
+	\item \textbf{Configuración adicional para el paquete \textit{(paquete\_\%.bbappend)}}: <paquete> se refiere al nombre, y ``\%'' simboliza el número de versión. En este archivo se hace referencia a los ficheros del directorio \textit{/files} y los parches de \textit{/patches} que se quieren tomar en consideración.
+\end{itemize}
+
+Para terminar con la introducción a Yocto, cabe destacar la importancia de \textbf{los parches} previamente mencionados (o \textit{patches} en inglés). Estos permitirán de una forma escalable y, sobre todo automatizada, modificar el comportamiento de las aplicaciones y programas libres ya presentes en los repositorios.\\
+
+Para entender el funcionamiento de los parches, veamos antes los estados por los que pasa un paquete por compilar:
 
 \begin{enumerate}
-	\item Se descarga el código fuente de la aplicación. El repositorio desde el que se descarga vendrá especificado por el fichero \textbf{\textit{``receta.bb''}} propio del paquete. Por ejemplo, \href{http://cgit.openembedded.org/openembedded-core/tree/meta/recipes-core/psplash/psplash_git.bb?h=master}{\texttt{la receta del paquete PSplash}}.
+	\item Se descarga el código fuente de la aplicación. El repositorio desde el que se descarga vendrá especificado por el fichero \textbf{\textit{``receta.bb''}} propio del paquete. Por ejemplo, la receta del paquete PSplash \cite{yocto-recipe-psplash}. La variable que almacena el enlace se llama \texttt{SRC\_URI}.
+	\item Los layers pueden aplicar configuración y parches al código descargado de otros layers, guardando estas modificaciones en archivos \textbf{\textit{``receta.bbappend''}}. Después del primer paso, para cada paquete se buscan todos los ficheros \textit{.bbappend} que le correspondan, y se aplican las modificaciones oportunas.
+	\item Una vez aplicados todos los parches, se compila el código completo y se incluye para ser instalado en la imagen de destino.
 \end{enumerate}
 
-Un recién llegado al proyecto podría pensar que la forma de redefinir comportamientos en paquetes ya existentes consiste en:
+Esto representado en UML en forma de diagrama de estados sería tal que así:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{imagenes/statechart-parche.png}
+	\caption{Diagrama de estados por los que pasa una dependencia en Open Embedded}
+	\label{statechart-parche}
+\end{figure}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\
+
+\subsubsection{Proceso de parcheo de paquetes}
+
+Por otro lado, un recién llegado al proyecto podría pensar que la forma de redefinir comportamientos en paquetes ya existentes consiste en:
 
 \begin{enumerate}
 	\item Hacer en otro repositorio un \textit{fork} del programa en cuestión.
@@ -103,13 +136,36 @@ Un recién llegado al proyecto podría pensar que la forma de redefinir comporta
 	\item Crear una receta en Yocto que obtenga el paquete desde el nuevo repositorio, con prioridad mayor al original.
 \end{enumerate}
 
-Esto realmente puede llegar a ``funcionar'' pero es desacertado ya que además de ser lento y arduo no aporta escalabilidad ni automatización de ningún tipo.\\
+Yo mismo probé a hacerlo durante un tiempo, pero a pesar de que esto realmente puede llegar a ``funcionar'', es desacertado, pues además de ser lento y arduo no aporta escalabilidad ni automatización de ningún tipo.\\
 
 La forma escalable de trabajar viene dada por \textbf{la herramienta \textit{devtool}}, que genera una copia local del código fuente del programa listo para que realicemos las modificaciones pertinentes. Además, nos permitirá realizar compilaciones utilizando esta versión temporal, para verificar el funcionamiento de los cambios añadidos. Encontramos la guía de estos pasos en la referencia \cite{wiki-yocto-patches}.\\
 
-Una vez que se generan los parches, han de ser guardados en el layer propio del creador de dicho parche. \texttt{Bitbake} detectará automáticamente la existencia de estos parches y los aplicará al código fuente del programa antes de compilarlo e instalarlo en la imagen de destino. Para desarrollar sistemas con Yocto, es una de las herramientas más usadas, ya que generalmente existen paquetes para casi cualquier necesidad que tengamos, pero siempre están abiertos a modificaciones más especiales.
+Ejecutamos \texttt{devtool nombre\_del\_paquete} y la herramienta descargará el código fuente, le serán aplicados todos los parches de las capas existentes por parte de \textit{bitbake}, y será generada una carpeta \texttt{./build/tmp/sources/nombre\_del\_paquete} con este código final.\\
 
-Una vez hayamos hecho esto, podremos centrarnos en los paquetes utilizados para satisfacer las necesidades del producto.
+Sobre el código de este directorio será sobre el que hagamos las modificaciones. Para probar estos cambios, bastará con compilar el paquete de forma aislada (\texttt{bitbake nombre\_del\_paquete}) y ejecutarlo.\\
+
+\subsubsection{Inclusión de parches en layer propio}
+
+Cuando terminemos con las pruebas y queramos guardar los cambios realizados, deberemos generar un archivo en forma de parche interpretable de forma automática por Bitbake, y que quede de forma persistente en nuestro propio layer.\\
+
+Bitbake detectará automáticamente la existencia de estos parches y los aplicará al código fuente del programa antes de compilarlo e instalarlo en la imagen de destino. Para desarrollar sistemas con Yocto, es una de las mecánicas más usadas, ya que generalmente existen paquetes para casi cualquier necesidad que tengamos, pero siempre están abiertos a modificaciones más especiales.\\
+
+El comando de generación de parches es simple y conocido, dado que no es específico de Bitbake sino de GNU/Linux. Para el caso de un parche a un paquete genérico, el comando tendría la siguiente estructura:\\
+
+\textit{\textbf{git diff ./build/tmp/sources/<paquete>/<fichero\_modificado> \\./<layer\_propio>/recipes-<X>/patches/<paquete>.patch}}\\
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\
+
+Una vez que tenemos el parche generado e importado en nuestro layer, necesitaremos hacer ver a la receta original del paquete parcheado la existencia de dichas modificaciones. Para ello crearemos una receta del tipo \textit{.bbappend} como las ya antes mencionadas, con el siguiente contenido:
+
+\begin{lstlisting}
+FILESEXTRAPATHS_prepend := "${THISDIR}/patches:"
+\end{lstlisting}
+
+Esto provocará que Bitbake automáticamente tenga en cuenta estos cambios y los incorpore sobre el código original del paquete.\\
+
+Una vez hayamos hecho esto, podremos centrarnos en los paquetes utilizados y/o desarrollados para satisfacer las necesidades del producto.
+
 \section{Desarrollo de los paquetes necesarios}
 
 
