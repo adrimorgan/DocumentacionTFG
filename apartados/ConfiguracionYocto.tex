@@ -30,6 +30,14 @@ Aquí podemos elegir entre cambiar el dispositivo de destino y los paquetes a in
 
 El nombre \texttt{core-image-minimal} hace referencia a la imagen de menor tamaño por defecto, por lo que para hacer pruebas es suficiente. \\
 
+Habremos de esperar un tiempo de entre treinta minutos y dos horas aproximadamente a que se descarguen todos los paquetes necesarios y se compilen. Tras esto, se habrá generado un archivo de imagen con extensión \textit{.sdimg} en el directorio \textit{./build/tmp/deploy/images/raspberrypi3/}.\\
+
+Podremos \textit{quemar} (o instalar) esta imagen en una tarjeta de memoria con la conocida utilidad \textit{dd}, presente en cualquier sistema GNU/Linux, siendo \texttt{/dev/sdX} el dispositivo referente a la tarjeta de memoria:\\
+
+\texttt{sudo dd if=core-image-minimal-raspberrypi3.sdimg of=/dev/sdX}\\
+
+Acto seguido podremos insertar la tarjeta de memoria en la placa y encenderla para entrar en el sistema.
+
 \subsection{Variables de configuración del sistema}
 
 La sintaxis de configuración es sencilla, y sigue la forma: 
@@ -168,10 +176,30 @@ Una vez hayamos hecho esto, podremos centrarnos en los paquetes utilizados y/o d
 
 \section{Desarrollo de los paquetes necesarios}
 
+Una vez que tenemos una ligera idea de cómo funciona el entorno de trabajo de \textit{Open Embedded/Yocto Project} nos será más sencillo entender las soluciones implementadas para satisfacer los requisitos estudiados.\\
 
+Empezaremos por generar una imagen para un sistema mínimo, sobre la que iremos añadiendo dependencias que satisfagan dichos requerimientos (funcionales o no funcionales).
 
 \subsection{Sistema mínimo}
 
+El archivo con la configuración final del sistema se encuentra en \texttt{dynasystem-image} \cite{dynasystem-image}, aunque la configuración mínima para funcionar sería, además de lo comentado en \textit{./build/conf/local.conf}, lo siguiente:\\
+
+\texttt{\# dynasystem-image\\
+inherit core-image\\
+IMAGE\_INSTALL += "packagegroup-core-boot"\\
+IMAGE\_FEATURES += "ssh-server-dropbear"}\\
+
+-- El nombre \texttt{core-image} hace referencia a la clase mínima necesaria para cualquier imagen de Yocto.\\
+
+-- Con la segunda línea hacemos referencia a todo el grupo de paquetes necesarios para arrancar una máquina con los paquetes mínimos necesarios.\\
+
+-- Por último, instalamos la característica del servidor SSH para administrar de forma fácil el sistema.\\
+
+Una vez que tenemos esta configuración guardada en el fichero \textit{./meta-dyna-system/recipes-core/images/dynasystem-image.bb}, basta con compilar la imagen con la orden: \texttt{bitbake dynasystem-image}.\\
+
+En este punto la distribución no aporta gran cosa, ya que lo único que hace es cargar el kernel sin apenas programas instalados. Para dotarle de funcionalidades, necesitaremos ver la siguiente sección.
+
+\subsection{Soluciones implementadas/usadas}
 
 \texttt{POR EXPLICAR:\\
 	- autologin\\
