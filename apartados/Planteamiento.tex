@@ -1,11 +1,11 @@
 \chapter{Descripción del problema}
 
-\textit{DYNAsystem} aspira a ser un dispositivo utilizado tanto por deportistas como por investigadores de ciencias de la salud y preparadores físicos de todo el mundo; para lo que la compañía se enfoca a tres distintas líneas de mercado: \texttt{HEALTH} (salud), \texttt{SPORT} (deporte) y \texttt{RESEARCH} (investigación). Sin embargo, para llegar a estas cotas de mercado ha de ser un \textbf{sistema funcional, versátil, único e innovador}.\\
+\textit{DYNAsystem} aspira a ser un dispositivo utilizado tanto por deportistas como por investigadores de ciencias de la salud y preparadores físicos de todo el mundo; para lo que la compañía se enfoca a tres distintas líneas de mercado: \texttt{\textit{HEALTH}} (salud), \texttt{\textit{SPORT}} (deporte) y \texttt{\textit{RESEARCH}} (investigación). Sin embargo, para llegar a estas cotas de mercado ha de ser un \textbf{sistema funcional, versátil, único e innovador}.\\
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{imagenes/dynasystem-blue-floor.jpeg}
-	\caption{Dispositivo DYNAsystem, de la línea \textbf{HEALTH} - \href{https://twitter.com/dynasystem_/status/1001762762111021057}{\textit{Tweet} promocional del producto} [30/05/2018]}
+	\caption{Dispositivo \textit{DYNAsystem}, de la línea \textbf{\textit{HEALTH}} - \href{https://twitter.com/dynasystem_/status/1001762762111021057}{\textit{Tweet} promocional del producto} [30/05/2018]}
 	\label{dynasystem-health}
 \end{figure}
 
@@ -15,7 +15,7 @@ El dispositivo antecedente a éste se demoraba demasiado en el arranque, inicial
 
 Lógicamente, será necesario que la infraestructura ejecute la aplicación antes mencionada, en torno a la que gira el sistema. Por lo que ésta sufre algún problema o cierre inesperado, el sistema habrá de restaurar su estado (reiniciando automáticamente si la ocasión lo requiere), ya que si el programa no está corriendo, no tendrá sentido que el dispositivo esté en funcionamiento.\\
 
-Durante el tiempo de encendido, el usuario no querrá que su innovador dispositivo le muestre en pantalla una ventana negra de comandos con texto en blanco, por ejemplo, mostrando mensajes del kernel de Linux en carga. Preferiblemente, le gustará ver algún tipo de imagen estática o animada durante el proceso, que desaparezca con dicha aplicación ya preparada.\\
+Durante el tiempo de encendido, el usuario no querrá que su innovador dispositivo le muestre en pantalla una ventana negra de comandos con texto en blanco, por ejemplo, mostrando mensajes del \textit{kernel} de \textit{Linux} en carga. Preferiblemente, le gustará ver algún tipo de imagen estática o animada durante el proceso, que desaparezca con dicha aplicación ya preparada.\\
 
 El sistema deberá permitir la conexión a Internet, de forma tanto inalámbrica como cableada, de forma transparente e intuitiva para el usuario. En un futuro se espera tener aplicaciones móviles capaces de tratar los datos emitidos por la máquina, por lo que esta necesidad de conectividad es imperativa.\\
 
@@ -23,7 +23,7 @@ Se espera que se puedan guardar datos brutos generados por la aplicación en un 
 
 Una de las carencias que sufría el dispositivo implementado por la compañía antigua era la falta de medios de depuración de fallos de software surgidos a lo largo del tiempo. Por tanto, se requiere disponer de un sistema de actualizaciones integrado con el dispositivo que permita solucionarlos de forma remota, ahorrando grandes costes en movilización de servicio técnico.\\
 
-Este protocolo de actualización podrá hacerse mediante red cableada o WiFi (dadas las especificaciones de conectividad de la máquina), y deberá ser lo suficientemente inteligente para saber cuándo una actualización ha sido instalada con éxito; asegurándose de que todo ha ido según lo esperado y retornando a la versión anterior si la nueva impidiese el uso o dejase al dispositivo incomunicado. Por otro lado, dicho sistema de actualizaciones deberá pedir confirmación al usuario antes de aplicar las nuevas instalaciones, de forma que no lo interrumpan en sus ejercicios.\\
+Este protocolo de actualización podrá hacerse mediante red cableada o \textit{Wi-Fi} (dadas las especificaciones de conectividad de la máquina), y deberá ser lo suficientemente inteligente para saber cuándo una actualización ha sido instalada con éxito; asegurándose de que todo ha ido según lo esperado y retornando a la versión anterior si la nueva impidiese el uso o dejase al dispositivo incomunicado. Por otro lado, dicho sistema de actualizaciones deberá pedir confirmación al usuario antes de aplicar las nuevas instalaciones, de forma que no lo interrumpan en sus ejercicios.\\
 
 El proceso de actualización debe ser fácilmente implementable y llevado a cabo de forma sencilla por una pequeña parte del equipo de desarrollo, que registren los cambios de versiones y desplieguen las actualizaciones desde sus puestos de trabajo.\\
 

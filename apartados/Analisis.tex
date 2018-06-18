@@ -17,7 +17,7 @@ Vistos dichos requisitos, examinemos los requerimientos de la infraestructura ex
 
 \begin{itemize}
 	\item El paradigma de despliegue de versiones debe ser fácil de acoplar al sistema y transparente con la aplicación, de forma que ésta sea consciente de la existencia de nuevas versiones y pueda pedir confirmación al usuario. Además, deberán estar centralizadas en un servidor (ya sea local a la empresa o contratado de forma externa); de forma que en lugar de enviarse la actualización individualmente a cada máquina, sean las propias máquinas las que mediante la comunicación con el servidor detecten las potencialmente nuevas versiones.
-	\item Para poder realizar actualizaciones atómicas de todo el sistema, será necesario un particionado múltiple. Es decir, el mismo sistema operativo deberá tener dos particiones con sistema de ficheros. Así, mientras una está en ejecución la nueva versión podrá ser instalada en la otra.
+	\item Para poder realizar actualizaciones atómicas de todo el sistema, será necesario un particionado múltiple. Es decir, la misma distro deberá tener dos particiones con sistema de ficheros. Así, mientras una está en ejecución la nueva versión podrá ser instalada en la otra.
 	\item Este intercambio de información podrá producirse mediante red cableada o inalámbrica, sin que ello importe al resultado de la operación o dificulte este proceso.
 	\item En cada nueva versión del sistema operativo, deberán incluirse las nuevas versiones tanto de la aplicación como del software de la \textbf{electrónica interna} (que se manejaría íntegramente por la aplicación embebida y no ya por la distro en cuestión).
 \end{itemize}
@@ -31,7 +31,7 @@ Vistas las necesidades del sistema de actualización, veamos ahora un diagrama d
 	\label{statechart-actualizacion}
 \end{figure}
 
-Una vez definido a petición un período de comprobación de versiones, el cliente se mantendrá a la espera hasta que dicho período se dispare; entonces realizará mediante HTTPS una consulta al servidor, quien le responderá si existe una versión nueva o no.\\
+Una vez definido a petición un período de comprobación de versiones, el cliente se mantendrá a la espera hasta que dicho período se dispare; entonces realizará mediante \textit{HTTPS} una consulta al servidor, quien le responderá si existe una versión nueva o no.\\
 
 Si no la hay, el cliente vuelve a \textit{``dormirse''}. De lo contrario, comienza la descarga en segundo plano del nuevo software; el cual es instalado en la partición inactiva.\\
 
@@ -60,13 +60,13 @@ Según \textit{Bruce Powel Douglass}, un actor no es más que un objeto (no ya s
 
 \subsubsection{Usuario normal (cliente)}
 
-Es aquel que adquiere la máquina DYNAsystem (o la utiliza en algún gimnasio o centro). Su actuación con respecto a la máquina desde el punto de vista del sistema operativo será sencilla, ya que él simplemente llegará al dispositivo, lo encenderá y visualizará una imagen de carga hasta que aparezca la aplicación embebida, con la que podrá trabajar. Sin embargo, a lo largo de este uso utilizará indirectamente funcionalidades provistas por el sistema operativo, como la reproducción de sonidos indicativos, el guardado de datos a través de USB o la conexión WiFi. Todos estos servicios deberán ser satisfechos por el sistema.
+Es aquel que adquiere la máquina \textit{DYNAsystem} (o la utiliza en algún gimnasio o centro). Su actuación con respecto a la máquina desde el punto de vista del sistema operativo será sencilla, ya que él simplemente llegará al dispositivo, lo encenderá y visualizará una imagen de carga hasta que aparezca la aplicación embebida, con la que podrá trabajar. Sin embargo, a lo largo de este uso utilizará indirectamente funcionalidades provistas por el sistema operativo, como la reproducción de sonidos indicativos, el guardado de datos a través de USB o la conexión \textit{Wi-Fi}. Todos estos servicios deberán ser satisfechos por el sistema.
 
 \subsubsection{Programador(es) de la aplicación embebida}
 
-Aunque no participan directamente en esta parte del proyecto (\textit{Meta-DYNAsystem}), para modularizar tareas y que la distribución GNU/Linux siga un desarrollo independiente será necesario el proceso de creación de la aplicación embebida por otro lado, llevado a cabo por el número de personas que la compañía estime necesarias.\\
+Aunque no participan directamente en esta parte del proyecto (\textit{Meta-DYNAsystem}), para modularizar tareas y que la distribución \textit{GNU/Linux} siga un desarrollo independiente será necesario el proceso de creación de la aplicación embebida por otro lado, llevado a cabo por el número de personas que la compañía estime necesarias.\\
 
-Estos serán los encargados de abstraerse del sistema Linux y utilizar los módulos provistos por este (de gestión de interfaces de red y de discos, principalmente).
+Estos serán los encargados de abstraerse del sistema \textit{Linux} y utilizar los módulos provistos por este (de gestión de interfaces de red y de discos, principalmente).
 
 \subsubsection{Administrador(es) del sistema operativo}
 

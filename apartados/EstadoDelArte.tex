@@ -15,10 +15,10 @@ Un ejemplo de sistema empotrado podría ser el que encontramos en algunos negoci
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\linewidth]{imagenes/pedido-pantalla-tactil.jpg}
-	\caption{Pantallas táctiles para realizar pedidos en McDonald's - Fuente: \textit{Mientras Tanto En México} \cite{mcdonalds-pantalla-tactil-pedidos}}
+	\caption{Pantallas táctiles para realizar pedidos en \textit{McDonald's} - Fuente: \textit{Mientras Tanto En México} \cite{mcdonalds-pantalla-tactil-pedidos}}
 \end{figure}
 
-Por otra parte, nos encontramos con la empresa alemana \textbf{\textit{gridX}} \cite{gridx}. Se trata de una empresa proveedora de energía limpia en Alemania que, además de apostar por las energías renovables y su administración de forma transparente, comercializan el dispositivo \textbf{gridBox}. Se trata de un sistema embebido que actúa a modo de contador y administrador inteligente con todo el consumo de dicha energía, optimizando el uso de ésta en el hogar.
+Por otra parte, nos encontramos con la empresa alemana \textbf{\textit{gridX}} \cite{gridx}. Se trata de una empresa proveedora de energía limpia en Alemania que, además de apostar por las energías renovables y su administración de forma transparente, comercializan el dispositivo \textbf{\textit{gridBox}}. Se trata de un sistema embebido que actúa a modo de contador y administrador inteligente con todo el consumo de dicha energía, optimizando el uso de ésta en el hogar.
 
 \begin{figure}[H]
 	\centering
@@ -29,12 +29,12 @@ Por otra parte, nos encontramos con la empresa alemana \textbf{\textit{gridX}} \
 
 Además de ser un sistema dedicado con este propósito tan específico, implementa conexión de red para poder monitorizar los datos y transferirlos a aplicaciones de móvil y/o escritorio a los dueños de la casa. Y por último, el producto lleva integrado un sistema de actualizaciones \textit{OTA} con \textit{Mender.io}, una interesante herramienta para realizar actualizaciones atómicas en dispositivos embebidos de la que hablaremos extensamente más adelante.\\
 
-A modo de último ejemplo, nos encontramos con \textbf{\textit{Kinestral}} \cite{kinestral}; una compañía con sedes en Norteamérica y Taiwan que focaliza su negocio en \textit{la transformación del cristal}. Comercializan el producto \textbf{\textit{Halio}}, que se trata de una especie de vidrio inteligente para cualquier propósito (sobre todo, el de la instalación en edificios) que posee la particularidad de \textbf{oscurecerse automática o manualmente} para sombrear y reducir el impacto de los deslumbramientos de la luz solar.
+A modo de último ejemplo, nos encontramos con \textbf{\textit{Kinestral}} \cite{kinestral}; una compañía con sedes en \textit{Norteamérica} y \textit{Taiwan} que focaliza su negocio en \textit{la transformación del cristal}. Comercializan el producto \textbf{\textit{Halio}}, que se trata de una especie de vidrio inteligente para cualquier propósito (sobre todo, el de la instalación en edificios) que posee la particularidad de \textbf{oscurecerse automática o manualmente} para sombrear y reducir el impacto de los deslumbramientos de la luz solar.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{imagenes/halio-glass.jpeg}
-	\caption{Ejemplo de instalación de Halio Glass en el hogar - Fuente: \textit{Cuenta de Twitter oficial de Halio Glass (producto de Kinestral)} \cite{halio-glass}}
+	\caption{Ejemplo de instalación de \textit{Halio Glass} en el hogar - Fuente: \textit{Cuenta de \textit{Twitter} oficial de \textit{Halio Glass} (producto de \textit{Kinestral})} \cite{halio-glass}}
 	\label{halio-glass}
 \end{figure}
 
@@ -74,17 +74,17 @@ Concentran todos los componentes necesarios de un ordenador, por lo que basta co
 
 \subsubsection{Sistemas operativos dedicados y aplicaciones}
 
-Ahora bien, sobre estas plataformas hardware se pueden utilizar diferentes sistemas operativos, dando prioridad a la elaboración de una distribución propia de GNU/Linux a partir de diversas herramientas (como \textit{\textbf{OpenEmbedded/Yocto Project}} \cite{yocto-project}, \textit{\textbf{Buildroot}} \cite{buildroot} o \textit{\textbf{Linux from scratch}} \cite{linux-from-scratch}). Permiten generar sistemas basados en GNU/Linux utilizando programas y componentes software ya implementados y compartidos con la comunidad. Aseguran una gran modularidad y ligereza en cuanto a dependencias (no se instala nada que no sea necesario o requerido por el usuario final). Hablaremos de estas alternativas más adelante.\\
+Ahora bien, sobre estas plataformas hardware se pueden utilizar diferentes sistemas operativos, dando prioridad a la elaboración de una distribución propia de \textit{GNU/Linux} a partir de diversas herramientas (como \textit{\textbf{OpenEmbedded/Yocto Project}} \cite{yocto-project}, \textit{\textbf{Buildroot}} \cite{buildroot} o \textit{\textbf{Linux from scratch}} \cite{linux-from-scratch}). Permiten generar sistemas basados en \textit{GNU/Linux} utilizando programas y componentes software ya implementados y compartidos con la comunidad. Aseguran una gran modularidad y ligereza en cuanto a dependencias (no se instala nada que no sea necesario o requerido por el usuario final). Hablaremos de estas alternativas más adelante.\\
 
-Estas tecnologías suelen ser de código abierto, libres y gratuitas, aunque existen alternativas diferentes más específicas para este tipo de desarrollos. Por ejemplo, existe \textbf{\textit{Qt for Device Creation} (Qt para creación de dispositivos embebidos)}, que se basa en el \textit{Proyecto Yocto} incorporando las dependencias necesarias para lanzar de forma automática una aplicación embebida desarrollada con el conocido marco de trabajo Qt \cite{qt-device-creation}.\\
+Estas tecnologías suelen ser de código abierto, libres y gratuitas, aunque existen alternativas diferentes más específicas para este tipo de desarrollos. Por ejemplo, existe \textbf{\textit{Qt for Device Creation} (\textit{Qt} para creación de dispositivos embebidos)}, que se basa en el \textit{Proyecto Yocto} incorporando las dependencias necesarias para lanzar de forma automática una aplicación embebida desarrollada con el conocido marco de trabajo \textit{Qt} \cite{qt-device-creation}.\\
 
-Se trata de un stack de software ligero para sistemas GNU/Linux embebidos, que constituye una imagen completa (basándose en Yocto) para ser instalada directamente en el dispositivo final. Provee de herramientas para un desarrollo rápido y un menor tiempo de puesta en el mercado.\\
+Se trata de un \textit{stack} de software ligero para sistemas \textit{GNU/Linux} embebidos, que constituye una imagen completa (basándose en \textit{Yocto}) para ser instalada directamente en el dispositivo final. Provee de herramientas para un desarrollo rápido y un menor tiempo de puesta en el mercado.\\
 
 Es una alternativa comercial interesante para empresas dedicadas a este tipo de desarrollos, aunque no es nada asequible para estudiantes o programadores que no deseen una licencia comercial, ni para empresas pequeñas o \textit{start-ups} dado que el coste es muy elevado.\\
 
 \subsection{Sistemas de gestión de actualizaciones actuales}
 
-Otra parte importante de un sistema dedicado tiene que ver con la forma en que incorpora nuevas funcionalides y se parchean sus errores, lo que viene estrechamente ligado al \textit{proceso de despliegue de nuevas versiones}. En estos últimos años durante los que el \textit{IoT} ha ido tomando una popularidad progresiva, se mantiene la ferviente importancia de hablar de crecimiento, protección y seguridad.\\
+Otra parte importante de un sistema dedicado tiene que ver con la forma en que incorpora nuevas funcionalidades y se parchean sus errores, lo que viene estrechamente ligado al \textit{proceso de despliegue de nuevas versiones}. En estos últimos años durante los que el \textit{IoT} ha ido tomando una popularidad progresiva, se mantiene la ferviente importancia de hablar de crecimiento, protección y seguridad.\\
 
 Por ejemplo, hablemos sobre una anécdota negativa en este tipo de sistemas. En 2017 un grupo chino hackeó el sistema de un coche inteligente \textit{Tesla} por segunda vez, manejando el sistema dedicado a su antojo \cite{tesla-system-hacked}. Por suerte, no se trataba de un grupo criminal ni utilizaron estos medios para dañar a la compañía sino con fines investigadores, cuyos resultados notificaron a la empresa.\\
 
@@ -93,7 +93,7 @@ Para evitar manipulaciones como ésta o denegaciones de servicio que podrían de
 En la \textit{wiki} de \textit{Embedded Linux} (\url{https://elinux.org/}) encontramos una guía de necesidades que debería cumplimentar cualquier sistema de despliegue de nuevas versiones:
 
 \begin{itemize}
-	\item \textbf{Actualizaciones atómicas}. Las versiones nuevas se conciben como un ente único irreducible \textit{(atómico)}, y han de ser instaladas en su totalidad; o de otro modo no debería instalarse nada nuevo. Por ejemplo en los sistemas de escritorio como Windows o GNU/Linux puede darse el caso de que se actualicen solamente algunos de sus paquetes y otros no. En sistemas dedicados no puede darse esto, ya que podría llegarse a un estado no testeado de forma previa al despliegue, poniendo en compromiso tanto el funcionamiento como la seguridad del sistema.
+	\item \textbf{Actualizaciones atómicas}. Las versiones nuevas se conciben como un ente único irreducible \textit{(atómico)}, y han de ser instaladas en su totalidad; o de otro modo no debería instalarse nada nuevo. Por ejemplo en los sistemas de escritorio como \textit{Windows} o \textit{GNU/Linux} puede darse el caso de que se actualicen solamente algunos de sus paquetes y otros no. En sistemas dedicados no puede darse esto, ya que podría llegarse a un estado no testeado de forma previa al despliegue, poniendo en compromiso tanto el funcionamiento como la seguridad del sistema.
 	\item El gestor debe ser capaz de actualizar \textbf{todo el software} presente en el dispositivo (\textit{kernel, bootloader}, aplicaciones, etc.). Además, si se produce algún error o estado no deseado, debe regresar inteligentemente a la versión anterior para continuar en funcionamiento. Esta función se conoce en inglés como \textbf{\textit{roll-back support}} (soporte de ``vuelta hacia atrás'').
 	\item Obligatoriamente la nueva imagen ha de ser firmada por el sistema de despliegue y verificada por el cliente. Además será deseable que se transmita de forma cifrada hasta el dispositivo de destino.
 \end{itemize}
@@ -113,13 +113,13 @@ Como señala \textit{Bruce Powel Douglass} en el apartado 1.3 de su libro \texti
 	\item ``Prueba lo que despliegas y despliega lo que pruebas'': el propósito de testear modelos ejecutables permite desarrollar aplicaciones sin defectos de forma rápida (usando las tecnologías apropiadas) para un desarrollo iterativo veloz donde los tests \textit{solo necesitan hacerse una vez}.
 \end{itemize}
 
-Douglass propone el uso del lenguaje \textit{UML (Unified Modelling Language, o Lenguaje de Modelado Unificado)} para alcanzar estos fines, siguiendo una metodología desarrollada por él mismo llamada \texttt{ROPES} (\textit{Rapid Object-Oriented Process for Embedded Systems}, en español: ``Proceso rápido orientado a objetos para dispositivos embebidos''). Se trata de un paradigma interesante para llevar a la práctica en equipos de desarrollo en los que las tareas de implementación del hardware y el software se separan para luego unirse. Sin embargo, en este proyecto estaremos hablando de la infraestructura virtual que soporta al software, no ya sobre las aplicaciones embebidas como tal.
+\textit{Douglass} propone el uso del lenguaje \textit{UML (Unified Modelling Language, o Lenguaje de Modelado Unificado)} para alcanzar estos fines, siguiendo una metodología desarrollada por él mismo llamada \texttt{ROPES} (\textit{Rapid Object-Oriented Process for Embedded Systems}, en español: ``Proceso rápido orientado a objetos para dispositivos embebidos''). Se trata de un paradigma interesante para llevar a la práctica en equipos de desarrollo en los que las tareas de implementación del hardware y el software se separan para luego unirse. Sin embargo, en este proyecto estaremos hablando de la infraestructura virtual que soporta al software, no ya sobre las aplicaciones embebidas como tal.
 
 \section{Problemas que se desean resolver}
 
 La solución planteada por este proyecto tiene que ver con la necesidad de un sistema operativo embebido para un uso específico, en contraposición a sistemas ya existentes que incorporan paquetes innecesarios para este fin o permiten una mucho menor customización (como lo son \textit{Raspbian} \cite{raspbian}, \textit{Windows 10 IoT} \cite{windows-10-iot} o \textit{Ubuntu Mate} \cite{ubuntu-mate-raspberry} entre otros).\\
 
-Una distribución más ligera permitirá sufrir un \textbf{menor tiempo de arranque} además de disponer de \textbf{detalles estéticos personalizados} (como la no inclusión de mensajes del kernel durante su carga y la muestra de una imagen a lo largo del proceso). Todas las decisiones tomadas para este fin se habrán hecho pensando en la mayor conveniencia para el proyecto DYNAsystem.\\
+Una distribución más ligera permitirá sufrir un \textbf{menor tiempo de arranque} además de disponer de \textbf{detalles estéticos personalizados} (como la no inclusión de mensajes del \textit{kernel} durante su carga y la muestra de una imagen a lo largo del proceso). Todas las decisiones tomadas para este fin se habrán hecho pensando en la mayor conveniencia para el proyecto \textit{DYNAsystem}.\\
 
 La generación de esta nueva distribución tendrá como premisa la inclusión de dicho sistema ligero y personalizable a medida de la compañía en el producto, en contraposición a las distribuciones ya existentes.\\
 
