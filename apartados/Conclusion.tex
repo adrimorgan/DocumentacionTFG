@@ -1,19 +1,59 @@
 \chapter{Conclusión}
 
-fuentes de información válidas y fiables
+El interés suscitado por el proyecto en esta época de acelerado desarrollo tecnológico viene dado por el inimaginable conjunto de utilidades a las que pueden orientarse los dispositivos dedicados como \textit{DYNAsystem}. En este caso, se implanta un sistema informático tras un dispositivo pensado para perseguir el máximo rendimiento físico.\\
 
-planificación temporal realista de las actividades
+Esta inquietud inspirada por el proyecto causa un grato interés a participar en él, proporcionando soluciones de forma autónoma pensando siempre en el mejor devenir posible del proyecto.\\
 
-oportunidades para hacer nuevas propuestas
+\section{Fuentes de información utilizadas}
 
-caracterizar situación práctica reconociendo los conocimientos que demanda
+A pesar de vivir sumidos en la era de Internet, donde es posible encontrar casi cualquier tipo de información sobre cualquier tema, las bases teóricas más específicas necesarias para el proyecto las he extraído de referencias bibliográficas en libros.\\
 
-diferentes opciones para generar alternativas de solución
+Aunque no haya tomado parte en labores de diseño de placas electrónicas o de implementación de aplicaciones embebidas fuertemente relacionadas con el hardware, he necesitado tomar dichas bases para poder aportar mi desarrollo a la infraestructura virtual situada entre el hardware electrónico y la aplicación de la capa superior.\\
 
-profundizar en tareas asignadas cumpliendo los objetivos programados
+Como vemos en el capítulo 2 (sobre \textit{el estado del arte}), los sistemas de tipo embebido o dedicado pueden comportar muchas ventajas en cuanto a ahorro de costes y de personalización de productos, siempre y cuando atendamos de forma fiable a los requisitos que nos plantean los sistemas y realicemos unos análisis justos de ellos.\\
 
-revisar sistemáticamente el trabajo
+Dada esta importancia de requisitos y análisis, me he remitido a los libros de sistemas de tiempo real mencionados de autores como \textit{Bruce Powel Douglass} y \textit{Jean Paul Calvez} entre otros, por su veteranía con el tema y su capacidad de síntesis a la hora de modularizar las tareas.\\
 
-aspectos éticos y sociales relacionados con la profesión
+Por otro lado, las referencias utilizadas tanto para el desarrollo con \textit{Yocto Project} como con su integración con \textit{Hosted Mender} han sido ubicadas en las propias \textbf{documentaciones oficiales} de estos paquetes. Constan de una información bien estructurada y dividida tanto para proyectos rápidos de prueba como para desarrollo de sistemas en producción.
+
+\section{Planificación temporal de las actividades}
+
+Recién llegado al proyecto, me era imposible la estimación del tiempo necesario para el desarrollo, dado que no conocía las herramientas. Sin embargo, tras meses de aprendizaje y habituación a éstas puedo constatar el entrenamiento adquirido en este aspecto.\\
+
+Por ejemplo, como vemos en la sección del presupuesto de implantación del proyecto (Capítulo 8), hago distinción de estimaciones temporales y por tanto monetarias de lo que comportaría tener o no experiencia con dichas herramientas a la hora de generar un nuevo desarrollo.\\
+
+Además, tras haber implantado ya esta infraestructura en diversos dispositivos puestos a la venta, he aprendido a estimar los tiempos necesarios para reutilizar el código del proyecto ya desarrollado (compilación, formateo a memoria y montaje), como también vemos en dicho capítulo.
+
+\section{Nuevas propuestas realizadas y generación de alternativas como solución}
+
+En el capítulo 6, hablamos de todas las soluciones implementadas por mí mismo como respuesta a los requisitos planteados por la idea de producto, partiendo siempre desde las premisas de ``dispositivo embebido'' que estudiamos en las primeras secciones.\\
+
+Además, como vemos al final del capítulo 6 (en ``Integración con sistema de actualizaciones'') una de las propuestas planteadas de forma autónoma fue la posibilidad de la externalización del servicio de mantenimiento de actualizaciones por parte de \textit{Hosted Mender}. Esto además de suponer un ahorro a la empresa en cuanto a hardware de servidores, libraba del condicionamiento salarial de dedicar a una parte del equipo al mantenimiento de esto.
+
+\section{Reconocimiento de conocimientos necesarios para un caso práctico}
+
+Como fuimos mostrando a lo largo de las etapas de ``Análisis'' y de ``Soluciones'', todo el desarrollo del proyecto se basa mayormente en mi anterior experiencia e interés por \textit{Linux}, además de mi manejo para desenvolverme en situaciones de administración de este tipo de sistemas.\\
+
+Si no hubiera dispuesto de este conocimiento, habría sido ilógico presentarme voluntario para el desarrollo de esta infraestructura, y habría sido más razonable sugerir la contratación de este desarrollo a otra empresa dedicada al efecto.
+
+\section{Aspectos éticos y sociales relacionados}
+
+El proyecto nace con un planteamiento ligero y directo a los objetivos y con transparencia para todas las necesidades que ello conlleva.\\
+
+Esta transparencia se refleja en la propia licencia de esta infraestructura virtual, con el código publicado abiertamente siguiendo los esquemas de licencia que son utilizados por la comunidad del proyecto \textit{Yocto}, para todo aquel interesado que pueda reutilizarlo,  seguir aportando de forma desinteresada, o simplemente visualizar el código que lleva embebido la máquina que utiliza.\\
+
+Además, vista la situación actual de ciberseguridad (con hackeos y espionajes constantes, revisión oculta de los datos extraídos por los desarrolladores de las aplicaciones...) es importante que dicha transparencia se mantenga real.\\
+
+En este software no se tiene constancia de los datos del usuario más allá que de la dirección \textit{IP} desde la que se conectan al servidor central de actualizaciones.\\
+
+\section{Cumplimiento de los objetivos programados en el trabajo}
+
+Si analizamos detenidamente cada uno de los requisitos estudiados en el capítulo 4 y los confrontamos con las soluciones propuestas e implementadas en los capítulos 5 y 6, vemos que se ha llevado a cabo la consecución de los objetivos; permitiendo tanto a la empresa el aprovechamiento de estas nuevas funcionalidades a un precio mucho menor, como a los desarrolladores de software utilizar los módulos provistos para un más cómodo desarrollo.\\
+
+Además, tal y como vemos en el capítulo 7, \textbf{el proyecto ya ha tenido una implantación real en el mercado} a nivel internacional, manteniendo los lazos unidos en la distancia con el equipo de desarrollo dadas las posibilidades tanto de actualizar los dispositivos como de hacer un seguimiento de seguridad y administración.
+
+Por otro lado, tal y como fue planteada la infraestructura desde el principio, permite escalabilidad en todos los aspectos dando pie a una \textbf{revisión sistemática y programada} del desempeño del sistema. Por ejemplo, si en un tiempo se decide sustituir la \textit{Raspberry Pi} como dispositivo de referencia en favor de uno más potente, sería factible la migración del sistema operativo de forma rápida.\\
+
+Y por último, si en vez de evolucionar en potencia se quiere crecer en funcionalidades, es prácticamente inmediata la inclusión de nuevas librerías y sistemas software que permitan llevarlas a cabo desde los desarrolladores hasta los usuarios.
 
 \newpage
