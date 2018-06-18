@@ -189,7 +189,7 @@ inherit core-image\\
 IMAGE\_INSTALL += "packagegroup-core-boot"\\
 IMAGE\_FEATURES += "ssh-server-dropbear"}\\
 
--- El nombre \texttt{core-image} hace referencia a la clase mínima necesaria para cualquier imagen de \textit{Yocto}.\\
+-- El nombre \texttt{core-image} hace referencia a la clase mínima necesaria para cualquier imagen de \textit{Yocto}. De esta toma las bases para entenderse como imagen final de dispositivo y las referencias para ser compilada de forma exitosa.\\
 
 -- Con la segunda línea hacemos referencia a todo el grupo de paquetes necesarios para arrancar una máquina con los paquetes mínimos necesarios.\\
 
@@ -201,24 +201,209 @@ En este punto la distribución no aporta gran cosa, ya que lo único que hace es
 
 \subsection{Soluciones implementadas/usadas}
 
-\texttt{POR EXPLICAR:\\
-	- autologin\\
-	- arranque silencioso (no terminal)\\
-	- [seguridad] no entrada teclado\\
-	- [seguridad] no ejecución sin aplicación (watcher)\\
-	- [actualizaciones] salvar redes wifi\\
-	- [app] ejecución de la aplicación embebida\\
-	- [app] librerías de qt\\
-	- [actualizaciones] actualizacion interna de la electronica\\
-	- conectividad inalámbrica (wifi \& bluetooth)\\
-	- soporte de audio\\
-	- pantalla completa durante carga\\
-	- ficheros. soporte para usb's (formatos ntfs, fat, exfat)\\
-	- [actualizaciones] actualización a través de servidor\\
-	- [actualizaciones] confirmación por parte del usuario}\\
+Con los apartados comentados previamente, ya disponemos de un sistema capaz de arrancar en modo terminal de comandos. Sin embargo, no permite hacer \textit{nada} más, por lo que serán necesarias labores de implementación y reutilización de código para dotar al sistema de las características requeridas:
+
+\subsubsection{Arranque rápido del sistema}
+
+Por defecto, la imagen mínima del sistema utiliza \textit{\textbf{sysvinit}} como gestor de arranque; un motor antiguo pero estable. Sin embargo, según las pruebas realizadas en los inicios del proyecto, demoraba el inicio del dispositivo en \textbf{unos 45-50 segundos}. Para un sistema tan ligero, no tendría sentido sufrir esta latencia.\\
+
+Este retraso se debe a que el sistema operativo no pasa a estar completamente funcional hasta que no están cargados todos y cada uno de los componentes del sistema operativo.\\
+
+Dada mi experiencia con las distintas distribuciones de \textit{GNU/Linux} y sus gestores de arranque, me animé a probar a integrar \textit{\textbf{systemd}} a modo de motor, dado que se trata de una alternativa más novedosa, basada en servicios independientes que se cargan sucesivamente en segundo plano con el núcleo ya cargado y funcionando.\\
+
+Además, \textit{systemd} ofrece una manera muy intuitiva de creación y administración de servicios. Gracias a esto, es posible crear un nuevo fichero \texttt{<programa>.service} que gestione cuándo debe ser lanzado un programa. Esto facilita la iniciación automática de dependencias del sistema, como veremos más adelante.\\
+
+Para tomar \textit{systemd} como gestor de arranque predeterminado, podemos seguir los simples pasos provistos por la documentación de Yocto en la referencia \cite{systemd-yocto-project}; indicando en la variable \texttt{DISTRO\_FEATURES\_append} que se incluya ``\textit{systemd}''.\\
+
+Esta variable sirve para añadir comportamientos extra a los ya incluidos en la distro original (\textit{systemd}, dependencias de \textit{opengl}, paquetes de sonido de \textit{pulseaudio}, etc.). En el \textit{mega manual} podemos encontrar las referencias a los módulos deseados.
+
+\subsubsection{Arranque silencioso de terminal durante carga}
+
+Como mencionamos en los requisitos, se esperan detalles estéticos en el sistema que lo hagan pasar desapercibido como computador frente al usuario. Para ello, es de imperativa necesidad la ocultación de los mensajes de terminal del \textit{kernel} y una imagen a pantalla completa característica del dispositivo.\\
+
+En el caso de la \textit{Raspberry Pi 3} disponemos de dos indicadores propios al inicio:
+\begin{itemize}
+	\item Imagen con degradado arco iris que prueba que la pantalla funciona.
+	\item Logo propio decorativo durante la carga.
+\end{itemize}
+
+Sin embargo, queremos prescindir de estos indicadores por los motivos ya expuestos. Afortunadamente, en el caso de esta placa es muy sencillo desactivarlos. Basta con modificar los archivos \texttt{/boot/config.txt} \texttt{/boot/cmdline.txt} añadiendo las dos siguientes líneas, respectivamente:
+
+\begin{lstlisting}
+# /boot/config.txt
+disable_splash=1
+\end{lstlisting}
+
+\begin{lstlisting}
+# /boot/cmdline.txt
+logo.nologo
+\end{lstlisting}
+
+Por otro lado, el \textit{bootloader} necesario para la integración con \textit{Mender}, \textbf{\textit{U-Boot}} muestra varios mensajes durante la carga del sistema. Para deshabilitarlos, fue necesario desarrollar un parche con la herramienta \textit{devtool} para el código original siguiendo el método previamente descrito.\\
+
+Recordemos que uno de los motivos por los que elegimos la \textit{Raspberry Pi 3} fue por su gran comunidad de usuarios. Pues bien, en este punto se reafirmó esta decisión, dado que gracias a la información obtenida en foros de Internet pude dar con los \textit{flags} necesarios por incluir:
+
+\begin{lstlisting}
+# u-boot/include/configs/rpi.h
+#define CONFIG_DISABLE_CONSOLE
+#define CONFIG_SILENT_CONSOLE
+#define CONFIG_SILENT_CONSOLE_UPDATE_ON_SET
+#define CONFIG_SYS_DEVICE_NULLDEV
+#define CONFIG_BOARD_EARLY_INIT_F 1
+
+# u-boot/board/raspberrypi/rpi/rpi.c
+int board_early_init_f(void){
+	gd->flags |= (GD_FLG_SILENT | GD_FLG_DISABLE_CONSOLE);
+	return 0;
+}
+\end{lstlisting}
+
+Gracias a la inclusión de estos \textit{flags} en los fuentes de cabecera de la placa, y de la implementación del método que toma en consideración dichos \textit{flags}; tras la compilación aislada de \textit{u-boot} y su inclusión en el sistema el arranque es limpio y sin mensajes del kernel.\\
+
+La configuración aislada para \textit{u-boot} y los parches aplicados pueden encontrarse \href{https://github.com/adrianmorente/meta-dynasystem/tree/master/recipes-bsp/u-boot}{aquí, en su subdirectorio dentro de \textit{Meta-DYNAsystem}}.
+
+\subsubsection{Muestra de imagen a pantalla completa durante carga}
+
+Una vez que no tenemos mensajes del kernel en pantalla, queremos que lo primero que sea el usuario desde que acciona el interruptor sea una imagen característica. Para esto adaptamos el paquete \textit{PSplash}, dedicado explícitamente a la monitorización gráfica del arranque en forma de imagen con una barra de carga.\\
+
+Sin embargo, dicha barra de carga solo funciona con el arranque lento basado en \textit{sysvinit}, el gestor comentado con anterioridad, dado que carga todo el sistema completo antes de iniciarse, mientras que \textit{systemd} lanza los servicios de forma independiente, sin saber realmente cuánta latencia tendrá el arranque.\\
+
+Por tanto, para dar el salto al uso de \textit{systemd} fue necesario un parche que eliminase la barra de carga, centrase la imagen e implementase un servicio que la imprimiese en pantalla lo antes posible.
+
+En este caso la configuración fue mucho más simple, dado que tan solo era necesario cambiar la imagen incluida en la carpeta \texttt{/files} del subdirectorio de \textit{Meta-DYNAsystem} para \textit{PSplash}, y tres valores contenidos en un fichero \texttt{.h} del código fuente.\\
+
+Los cambios realizados pueden apreciarse \href{https://github.com/adrianmorente/meta-dynasystem/tree/master/recipes-core/psplash}{\texttt{aquí, en su subdirectorio correspondiente dentro del \textit{layer}}}.
+
+\subsubsection{Ejecución de la aplicación embebida con \textit{watcher} de seguridad}
+
+Dado que la aplicación que da vida útil al dispositivo está realizada sobre el framework \textit{Qt} (en \textit{C++}) mas su lenguaje de modelado \textit{QML} (similar a \textit{Javascript}), a la distro se le requiere que incorpore los paquetes necesarios para su ejecución.\\
+
+El listado de librerías de \textit{Qt} disponibles en \href{https://layers.openembedded.org}{\textit{OpenEmbedded Layer Index}} es muy numeroso, e instalar todas rompería con el principio de ligereza e ``incluir solo lo necesario'' que buscamos.\\
+
+Por tanto, en este punto fue necesaria una puesta en común con el equipo de desarrollo de la aplicación, quienes me proporcionaron un listado de las librerías usadas por ellos internamente; entre las que se incluyen las necesarias para la comunicación con la electrónica, para representar gráficas, para disponer de un teclado virtual en la pantalla táctil y otras varias.\\
+
+La lista de paquetes necesarios por instalar, con ayuda del \textit{Index Layer} antes mencionado, se incluye en un grupo dentro de \texttt{dynasystem-image}, la receta comentada con anterioridad:\\
+
+\begin{lstlisting}
+QT5_PKGS = " \
+qtbase qtbase-plugins qtbase-tools \
+qtcharts qtcharts-qmlplugins \
+qtdeclarative qtdeclarative-qmlplugins \
+qtgraphicaleffects qtgraphicaleffects-qmlplugins \
+qtmultimedia qtmultimedia-qmlplugins \
+qtquickcontrols qtquickcontrols-qmlplugins \
+qtquickcontrols2 qtquickcontrols2-qmlplugins \
+qtserialport qtserialport-mkspecs \
+qtvirtualkeyboard qtvirtualkeyboard-qmlplugins \
+qtxmlpatterns \
+"
+\end{lstlisting}
+
+Todos y cada uno de estos paquetes están presentes en el layer \textit{\textbf{meta-qt5}}, provisto para \textit{Yocto Project} por el propio equipo de desarrollo de \textit{Qt}.
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\
+
+Con las dependencias ya instaladas para la ejecución manual, ahora es necesaria la automatización del servicio que mantenga a la aplicación corriendo desde el inicio. Además, por motivos de \textbf{seguridad}, la aplicación es administrada por un \textit{watcher} que controla en todo momento que la aplicación está en ejecución. Si deja de estarlo por causas desconocidas (como la manipulación de un usuario o un error de aplicación), se reinicia el dispositivo y vuelve a cargar la aplicación.\\
+
+Como ya hemos comentado, el gestor de arranque \textit{systemd} facilita mucho este hecho, por lo que podemos alojar el manejo del binario en un servicio inteligible por dicho gestor, del tipo:\\
+
+\begin{lstlisting}
+[Unit]
+Description=Watches DYNAsystem application
+Wants=psplash-dynasystem.service
+After=psplash-dynasystem.service
+DefaultDependencies=no
+
+[Service]
+Type=idle
+User=root
+Group=root
+ExecStart=/usr/bin/dynasoft-watcher.sh
+
+[Install]
+WantedBy=sysinit.target
+\end{lstlisting}
+
+El servicio mostrado lanza la aplicación tan pronto como sea posible inmediatamente después del servicio \textit{PSplash}. Internamente, una vez que está completamente cargada, la aplicación embebida lanza un comando \texttt{psplash-write QUIT} que oculta la imagen previa.\\
+
+El contenido del script \texttt{dynasoft-watcher.sh} es simple. Tan solo ejecuta la aplicación y espera a que termine. Si se da el caso de que termine, significará que se ha producido algo inesperado, por lo que es imperativo el reinicio. Antes del reinicio, se muestra la imagen de carga durante tres segundos:\\
+
+\begin{lstlisting}
+/usr/bin/dynasoft -platform eglfs &
+wait
+psplash &
+sleep 3
+reboot
+\end{lstlisting}
+
+\subsubsection{Inicio de sesión automático}
+
+Sirve de poco la ejecución programada de la aplicación si se requiere al usuario un inicio de sesión a través de la terminal, por lo que establecemos de imperativa necesidad un inicio automático.\\
+
+Por experiencia, personalmente ya sabía que basta con añadir \texttt{``--autologin <usuario>''} en el comando de ejecución del servicio \textit{getty}, que es el encargado de registrar los inicios de sesión a través de la terminal, para dotar de inicio automático al usuario elegido.\\
+
+Sin embargo, la configuración automática mediante Yocto no es tan sencilla. Afortunadamente, en el \textit{layer \textbf{meta-ostro}} disponen de un script que realiza esta configuración exportando el comportamiento en forma de \textbf{clase} de \textit{Bitbake} \cite{ostro-image-autologin}.\\
+
+La clave de esta funcionalidad se registra en la siguiente función, siendo \textit{sed (Stream EDitor)} una conocida herramienta de manipulación de ficheros de texto en \textit{Linux}:\\
+
+\begin{lstlisting}
+$ sed -i -e 's/^\(ExecStart *=.*getty \)/\1--autologin 
+root /' ${LOCAL_GETTY}
+\end{lstlisting}
+
+Simplemente accede al fichero de configuración del paquete \textit{getty} a través de la variable propia de \textit{Bitbake} \texttt{\${LOCAL\_GETTY}} y le añade la subcadena antes mencionada.\\
+
+Dado que \textbf{\textit{meta-ostro}} está dirigido a otro tipo de placa e incluye dependencias incompatibles con nuestro proyecto, no es posible la importación de dicho \textit{layer} como dependencia del sistema de compilación. Por tanto, la solución alternativa era la creación de una clase específica con el mismo comportamiento, \textbf{atribuyendo todos los créditos a los autores} dentro del código.\\
+
+Podemos encontrar dicha clase \href{https://github.com/adrianmorente/meta-dynasystem/blob/master/classes/dynasystem-image.bbclass}{\texttt{aquí, en el subdirectorio de \textbf{clases} del repositorio de \textit{Meta-DYNAsystem}}}.
+
+\subsubsection{Deshabilitar entrada de teclado}
+
+La entrada de teclado físico ha de estar completamente deshabilitada para el usuario (por petición de la compañía). Esto se debe a motivos de seguridad, dado que el usuario podría utilizar esa posibilidad de entrada de datos para cerrar la aplicación y manipular el sistema operativo embebido.\\
+
+La implementación decidida para esta funcionalidad es bastante sencilla pese a lo que pudiera aparentar.\\
+
+Conociendo que los dispositivos de todo tipo (ratones, teclados, etc.) conectados al sistema figuran en \textit{GNU/Linux} bajo el directorio \texttt{/dev/input/by-path/}, se pueden filtrar estos dispositivos por su nombre.\\
+
+Gracias a esto, podemos detectar fácilmente si se ha insertado un dispositivo de tipo teclado (representado en el nombre por la subcadena ``kbd'').\\
+
+Si realizamos una comprobación cíclica en segundo plano en forma de \textit{script}, podremos detectar de manera casi instantánea la inserción de estos dispositivos:\\
+
+\begin{lstlisting}
+while [ 1 ]
+do
+	if [ `ls /dev/input/by-path/ | 
+		grep kbd | wc -l` == 1 ]
+	then
+		reboot
+	fi
+	sleep 1
+done
+\end{lstlisting}
+
+Lo que hace este \textit{script} de \textit{Bash} es listar dicho directorio cada segundo, filtrando los nombres contenidos por ``kbd''. Si el resultado del filtro es positivo, significa que hay un teclado conectado, por lo que se reinicia obligatoriamente el sistema.
+
+\subsubsection{Conectividad inalámbrica y soporte de sistemas de ficheros}
+
+Como anticipamos a lo largo de la memoria, tanto las dependencias de la conectividad inalámbrica como las de los sistemas de ficheros auxiliares solamente se ofrecen a la capa de desarrollo de software como módulos necesarios, pero la distribución en sí no las utiliza directamente.\\
+
+Es decir, incluyo personalmente estos paquetes pero no les codifico ninguna lógica adicional, ya que son mis compañeros de desarrollo de la aplicación embebida los que la utilizarán como abstracción de estas funcionalidades.\\
+
+Siguiendo con el paradigma usado en la imagen \texttt{dynasystem-image}, creo dos nuevos grupos \texttt{NETWORKING} y \texttt{FILESYSTEMS} donde se concatenan los paquetes necesarios para satisfacer estos requerimientos.\\
+
+Entre las dependencias de conectividad, encontramos paquetes necesarios para conectar a \textit{Wi-Fi} mediante comandos (provistos por la dependencia \textbf{\textit{NetworkManager}} y utilizados directamente por la aplicación de la capa superior) y clientes del servicio \textit{DHCP} (como \textit{dhcpcd}) para solicitar dirección \textit{IP} al servidor entre otros.\\
+
+Por otro lado, para permitir el montado, guardado y desmontado de sistemas de almacenamiento externo desde la distribución, se importan diversas librerías que aportan compatibilidad con determinados formatos (como \textit{NTFS} y \textit{exFAT}). Una vez más, no aportan lógica artificial al sistema, sino que permite el montado de dispositivos en estos formatos concretos cuando se intenta realizar desde la aplicación.\\
+
+Por supuesto, los grupos \texttt{NETWORKING} y \texttt{FILESYSTEMS} pueden consultarse en la propia imagen \texttt{dynasystem-image} \cite{dynasystem-image}.
 
 \section{Integración con el gestor de actualizaciones}
 
 Por explicar integración con \textit{Mender}, paquetes necesarios, etc.
+
+- [actualizaciones] actualización a través de servidor\\
+- [actualizaciones] confirmación por parte del usuario\\
+- [actualizaciones] actualizacion interna de la electronica\\
+- [actualizaciones] salvar redes wifi\\
 
 \newpage
