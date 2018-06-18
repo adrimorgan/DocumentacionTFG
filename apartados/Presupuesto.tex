@@ -1,23 +1,29 @@
 \chapter{Presupuesto del proyecto}
 
-Pasemos ahora a realizar una estimación lo más acertada posible del coste de implantación del proyecto. Independientemente de haber sido pensado para su integración con DYNAsystem, el contenido desarrollado podría aprovecharse para su uso en otro tipo de sistemas dedicados, modificando tan solo la imagen de carga y la aplicación embebida (y otras dependencias, si se quiere). Finalmente, haremos la distinción presupuestaria de lo que supone para una empresa (o desarrollador) llevar a cabo el proyecto en cuanto a \textbf{producción}, y por otro lado el que sería un precio justo de venta al público.\\
+Pasemos ahora a realizar una estimación lo más acertada posible del coste de implantación del proyecto. Independientemente de haber sido pensado para su integración con \textit{DYNAsystem}, el contenido desarrollado podría aprovecharse para su uso en otro tipo de sistemas dedicados, modificando tan solo la imagen de carga y la aplicación embebida (y otras dependencias, si se quiere). Finalmente, haremos la distinción presupuestaria de lo que supone para una empresa (o desarrollador) llevar a cabo el proyecto en cuanto a \textbf{producción}, y por otro lado el que sería un precio justo de venta al público.\\
 
 Empecemos por la parte física con \textbf{el hardware final}, que aunque proporcionalmente apenas supone coste merece una apreciación:
 
 \begin{itemize}
 	\item Por un lado tenemos el \textbf{computador de placa reducida}. En este caso se trata de la ya tan mentada \textit{Raspberry Pi} aunque podría adaptarse a otra placa (cambiando algunos drivers específicos). Ya mencionamos que los argumentos por los que principalmente se decidió desarrollar un sistema embebido sobre este tipo de dispositivos fue por \textbf{consumo}, en contraposición a las prestaciones; y \textbf{precio}, dado que esta gama suele oscilar siempre en torno a los \textbf{30-40€} \cite{raspberry-pi-amazon} y cumple nuestras necesidades de rendimiento sin problema.
-	\item Por otro lado, necesitaremos una \textbf{tarjeta de memoria} en formato \textit{Micro SD} donde instalar el sistema operativo. Aquí las restricciones no vendrán dadas por el tamaño, dado que la imagen completa ocupa poco más de 400 MiB; sino por \textbf{la velocidad}, que repercutirá directamente en la lectura de datos en la carga del sistema. Con una de estas memorias de la clase 10 (mínimo 10 MB/s) bastaría sin problema. En cuanto al rango de precios, nos moveremos entre los \textbf{5 y 12€} según el tamaño que elijamos, aunque no sea necesario en su totalidad.
+	\item Por otro lado, necesitaremos una \textbf{tarjeta de memoria} en formato \textit{Micro SD} donde instalar el sistema operativo. Aquí las restricciones no vendrán dadas por el tamaño, dado que la imagen completa ocupa poco más de 400 \textit{MiB}; sino por \textbf{la velocidad}, que repercutirá directamente en la lectura de datos en la carga del sistema. Con una de estas memorias de la clase 10 (mínimo 10 \textit{MB/s}) bastaría sin problema. En cuanto al rango de precios, nos moveremos entre los \textbf{5 y 12€} según el tamaño que elijamos, aunque no sea necesario en su totalidad.
 \end{itemize}
 
-Esto concluye con que tendríamos la infraestructura física final por \textbf{cerca de 50€}.\\
+A este precio habremos de sumarle siempre un coste, sea del tiempo dedicado a realizar el pedido por Internet mas los gastos de envío; o bien al coste de movilidad del personal hasta un comercio donde adquirir dichos componentes. Pongamos esta cifra en \textbf{10€}, a modo de estimación.\\
+
+Esto concluye con que tendríamos la infraestructura física final por \textbf{cerca de 60€}.\\
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\
+
+Finalmente, volviendo a hablar del desarrollo del proyecto como parte del sistema embebido \textit{DYNAsystem}, cabe destacar que aún \textbf{no está perfectamente definido el precio de coste de producción de la empresa para estos dispositivos}. Sin embargo, podemos afirmar sin temor a equivocarnos que la implantación del computador de placa reducida con la distribución de \textit{GNU/Linux} instalada supone un porcentaje ínfimo del coste total (quizás entre un 4 y 5\% del precio de producción).
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}\\
 
 Por otro lado, aunque no se incluye dentro del final, una parte de hardware necesaria para llevar a cabo el proyecto será el centro de trabajo donde el ingeniero desarrolle el sistema (es decir, el ordenador con el que se realizarán las compilaciones). En cualquiera de los componentes a mentar podría incrementarse el precio si buscamos un resultado por encima de la media, pero en cuanto a gamas estándar y en base al mercado actual, estimemos de forma muy general la cifra necesaria:
 
 \begin{itemize}
-	\item Para empezar, el monitor. Sin ser demasiado exquisitos, partiendo de uno de 24 pulgadas con resolución FullHD y un resultado más que correcto, el precio partiría de \textbf{130-140€} \cite{monitor-samsung-pccom}, llegando a 300 si se buscase una configuración con doble monitor, o uno solo con mayores resoluciones y tamaños.
-	\item Por otro lado, el ordenador en sí. El ingeniero no necesitará realizar cómputos relacionados con gráficos sino que hará un gran desempeño del procesador y de la memoria (tanto volátil como persistente). Para esto, un procesador Intel i5 o i7 acompañado de 8 GiB de memoria RAM y 2 TiB de disco duro serían más que suficientes. Esta configuración sumaría \textbf{750-800€} al total \cite{ordenador-sobremesa-pccom}.
+	\item Para empezar, el monitor. Sin ser demasiado exquisitos, partiendo de uno de 24 pulgadas con resolución \textit{FullHD} y un resultado más que correcto, el precio partiría de \textbf{130-140€} \cite{monitor-samsung-pccom}, llegando a 300 si se buscase una configuración con doble monitor, o uno solo con mayores resoluciones y tamaños.
+	\item Por otro lado, el ordenador en sí. El ingeniero no necesitará realizar cómputos relacionados con gráficos sino que hará un gran desempeño del procesador y de la memoria (tanto volátil como persistente). Para esto, un procesador \textit{Intel} \textit{i5} o \textit{i7} acompañado de 8 \textit{GiB} de memoria \textit{RAM} y 2 \textit{TiB} de disco duro serían más que suficientes. Esta configuración sumaría \textbf{750-800€} al total \cite{ordenador-sobremesa-pccom}.
 	\item Para terminar con las herramientas necesarias, un combo de teclado y ratón, que en una gama estándar podría conseguirse por \textbf{20€} (o hasta \textbf{60} si buscamos un resultado más profesional con teclados mecánicos, inalámbricos o retroiluminados) \cite{combo-teclado-logitech-pccom}.
 \end{itemize}
 
@@ -28,9 +34,9 @@ Ahora bien, utilizando este hardware dedicará un número de horas de trabajo va
 Haciendo también una estimación del salario a tiempo completo del ingeniero (pongamos que oscila entre 1.200 y 1.800€), concluiríamos que el precio de coste total de producción sería el siguiente:
 
 \begin{quotation}
-	\textbf{Mínimo estimado\textit{}}: (1 mes) x (1.200€ de salario) + (1.000€ de ordenador) + (50€ de placa) = \textbf{2.250€}\\
+	\textbf{Mínimo estimado\textit{}}: (1 mes) x (1.200€ de salario) + (1.000€ de ordenador) + (60€ de placa) = \textbf{2.260€}\\
 	
-	\textbf{Máximo estimado\textit{}}: (2 mes) x (1.800€ de salario) + (1.300€ de ordenador) + (50€ de placa) = \textbf{4.950€}
+	\textbf{Máximo estimado\textit{}}: (2 mes) x (1.800€ de salario) + (1.300€ de ordenador) + (60€ de placa) = \textbf{4.960€}
 \end{quotation}
 
 Como decimos, en esta cifra influyen muchas variables, desde el precio de los componentes hasta el salario del desarrollador, pero podemos fijar el intervalo del \textbf{precio de coste de producción entre 2.000 y 5.000€}. 
