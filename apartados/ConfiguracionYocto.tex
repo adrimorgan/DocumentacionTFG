@@ -399,11 +399,121 @@ Por supuesto, los grupos \texttt{NETWORKING} y \texttt{FILESYSTEMS} pueden consu
 
 \section{Integración con el gestor de actualizaciones}
 
-Por explicar integración con \textit{Mender}, paquetes necesarios, etc.
+Como venimos comentando en algunos puntos del proyecto, \textit{Mender} será la herramienta de referencia para realizar el despliegue de nuevas versiones a los dispositivos ya instalados.\\
 
-- [actualizaciones] actualización a través de servidor\\
-- [actualizaciones] confirmación por parte del usuario\\
-- [actualizaciones] actualizacion interna de la electronica\\
-- [actualizaciones] salvar redes wifi\\
+Una vez que se han implementado todas las soluciones anteriores, llega el momento de integrar con el servicio de actualizaciones. Aunque a priori el sistema solo se basaba en \textit{systemd} sin utilizar \textit{u-boot} como \textit{bootloader} del sistema, el cliente de \textit{Mender} requiere de esta dependencia para poder implementar las actualizaciones sin fallo.\\
+
+\subsection{Requisitos de integración}
+
+Los requisitos necesarios para comenzar dicha integración podemos encontrarlos en \textbf{la documentación oficial de \textit{Mender.io}} \cite{mender-requirements}.\\
+
+En ellos sencillamente se describe la necesidad de un sistema basado en el proyecto \textit{Yocto}. Si se dispone de otro tipo, es conveniente realizar una petición de integración a su equipo de desarrollo, aunque esto se trata de una alternativa de pago.\\
+
+\subsubsection{Particionamiento}
+
+Por otro lado, otro requisito de importancia tiene que ver con \textbf{la división de particiones}. Para funcionar con \textit{Mender} se necesitan \textbf{cuatro}, dispuestas de la siguiente manera:
+
+\begin{itemize}
+	\item \textbf{Partición de arranque} (\texttt{/boot}): simboliza la partición de arranque. De esta toma los valores necesarios para iniciar el sistema el \textit{bootloader}. Además, contiene archivos para configurar el sistema, como \texttt{config.txt} y \texttt{cmdline.txt}, mencionados antes para la customización del sistema. Su instalación se produce en tiempo de compilación, y una vez que la imagen compilada se formatea en la tarjeta de memoria, esta no cambia.
+	\item \textbf{Partición primaria} (\texttt{/primary}): es una de las dos copias del sistema de ficheros. Por defecto, esta partición está marcada como activa y será desde la que arranque el sistema hasta que se produzca alguna actualización.
+	\item \textbf{Partición secundaria} (\texttt{/secondary}): es la segunda copia del sistema de ficheros. Por defecto se encuentra desactivada, pero se verá modificada en tiempo de actualización en segundo plano mientras que se ejecuta el sistema de ficheros de la partición \texttt{primary}.
+	\item \textbf{Partición persistente} (\texttt{/data}): es la única partición que admite operaciones de escritura en tiempo de ejecución. Se encuentra separada de las anteriores ya que es el único medio persistente entre actualizaciones, de forma que puede utilizarse para hacer copia de lo que quiera mantenerse en el paso de una versión a otra.
+\end{itemize} 
+
+\subsubsection{Uso de \textit{meta-mender}}
+
+\textbf{\textit{Meta-mender}} es el nombre que recibe el \textit{layer} usado por este servicio. En él se agrupan herramientas que realizan operaciones de forma automática como el particionado o la instalación en orden de \textit{u-boot}.\\
+
+Como hemos visto, en la documentación sugieren fuertemente el uso de su herramienta junto con un sistema basado en \textit{The Yocto Project}, por lo que la integración con \textit{layers}, recetas y clases es total.\\
+
+Para empezar, bastará con incluir el \textit{layer} dentro de los \textit{layers} en consideración (esto es, en el fichero \texttt{./build/conf/bblayers.conf} del que ya hemos hablado). Hecho esto, podremos empezar a utilizar las variables propias e importar los paquetes que nos interesen.\\
+
+\subsubsection{Configuración mínima necesaria para instalación}
+
+Como vemos en la documentación de integración con \textit{Yocto} \cite{building-mender-artifacts}, es necesario establecer estas nuevas variables:
+
+\begin{lstlisting}
+MENDER_ARTIFACT_NAME = "release-1"
+INHERIT += "mender-full"
+\end{lstlisting} 
+
+La primera hace referencia al número de versión de la compilación. Como se trata de la primera integración, será ``1''. Cuando se vayan sucediendo las actualizaciones, este valor se deberá ir incrementando con cada actualización.\\
+
+La segunda hace referencia a la clase \texttt{mender-full}, que si la examinamos dentro de los directorios del \textit{layer} vemos que incluye las directivas necesarias para todas las operaciones de particionamiento, formatos necesarios, tamaños de memoria, etc.\\
+
+En la documentación mencionada también se exige como requisito el uso de \textit{systemd} como gestor de arranque. Como ya nos anticipamos a este cambio para satisfacer nuestros propios requerimientos, se da por realizado.\\
+
+\subsubsection{Configuración para conexión con servidor}
+
+Aunque hablaremos del propio servidor central más adelante, comentemos los parámetros necesarios para esta configuración.\\
+
+En la misma documentación de antes encontramos dos variables de gran importancia para el desarrollo: \texttt{MENDER\_SERVER\_URL} y \texttt{MENDER\_TENANT\_TOKEN}.\\
+
+La primera hace referencia a la dirección del servidor con el que comunicar para el intercambio de información y actualizaciones.\\
+
+La segunda, por otra parte, contiene el \textit{token} de autorización para acceder a dicho servidor. Este token es generado para cada organización de forma aislada, y es necesario para establecer una conexión permitida entre el dispositivo dedicado y dicho servidor.\\
+
+Ahora bien, no podemos desplegar ni obtener actualizaciones sin un servidor donde centralizarlas. Veamos esto en la siguiente sección.
+
+\subsection{Configuración del servidor}
+
+Aquí nos surgen dos alternativas de importancia, ya que a la hora de disponer de un servidor de actualizaciones podemos instalar la herramienta en un servidor propio (llamada \textit{integration} y disponible en \textit{Github} \cite{mender-integration-server}), o por otro lado proceder a la contratación del servicio \textit{Hosted Mender}.\\
+
+La primera opción fue rápidamente desestimada dada la complicación que requiere la configuración del servidor, y que dentro del cuerpo empresarial iba a suponer un gasto demasiado grande tanto en coste como en tiempo de mantenimiento visto el volumen de la empresa.\\
+
+A priori, cuando aún me encontraba en la fase de análisis de herramientas y estudio de las que me podían ser útiles, desconocía por completo la opción \textit{Hosted}. Sin embargo, tras semanas de intercambio de correos electrónicos con parte de su equipo (\textit{Eystein Stenberg}, \textit{CTO}, y \textit{Ralph Nguyen}, jefe comercial), me propusieron la suscripción de prueba a esta modalidad de servicio.\\
+
+Por aquel entonces gratuita, para la integración bastaba con situar \texttt{https://hosted.mender.io} como contenido de la variable antes mencionada, y para la otra el \textit{token} generado en el acto de la suscripción.\\
+
+\subsection{Generación de actualización}
+
+Una vez hecho esto y compiladas las imágenes de los dispositivos con esta nueva información, ya era posible acceder al portal web de \textit{Hosted Mender} y ver los dispositivos conectados a Internet.\\
+
+Para desplegar una actualización de prueba, bastaría con incrementar el número de versión de la configuración de compilación, esperar a que terminase dicho proceso, y subir al servidor (en el apartado de \textit{Artifacts} la imagen con extensión \texttt{.mender} generada en el subdirectorio resultante antes mencionado.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{imagenes/captura-hosted-mender.png}
+	\caption{Captura del portal web de \textit{Hosted Mender} con artefactos ya avanzados, pestaña de \textit{Artifacts}}
+	\label{captura-hosted-mender}
+\end{figure}
+
+Conforme termina de subirse la actualización, navegamos a la pestaña \textit{Devices} y buscamos el dispositivo al que queremos desplegarla. Lo seleccionamos, elegimos el \textit{artifact} que quiere instalarse y esperamos a que comience el despliegue.\\
+
+Cabe destacar que es factible desplegar actualizaciones grupales y no solo de forma individual, para lo que tenemos la opción de agrupar los dispositivos en dicha pestaña.\\
+
+A continuación, deberemos esperar un tiempo de espera \textit{X} a que el dispositivo realice la consulta de existencia de actualizaciones al servidor (como describimos en la Figura 4.1). Este tiempo es configurable mediante los pasos documentados ricamente por \textit{Mender} en \cite{client-configuration}.\\
+
+Una vez el dispositivo la descargue y la instale en la partición inactiva, se reiniciará automáticamente para arrancar el nuevo sistema de ficheros. Si todo ha ido según lo correcto, enviará un \textit{commit} al servidor en señal de que la actualización ha finalizado con éxito; y la interfaz web de \textit{Hosted Mender} se lo hará saber al administrador.\\
+
+Si queremos prescindir de este reinicio automático y dar la opción al usuario de elegir, podemos desarrollar una solución casera como la del apartado siguiente:
+
+\subsubsection{Actualización confirmada por el usuario}
+
+Esta solución se trata de una propuesta por mí, que se integra estrechamente con la aplicación aunque su funcionamiento es simple.\\
+
+Se basa en los llamados \textbf{\textit{State scripts}} de \textit{Mender}, que son \textit{scripts} utilizables por el usuario entre estados, para dotar al sistema de un cierto comportamiento \cite{state-scripts-mender}.\\
+
+Por ejemplo, podemos ordenar al sistema que después de descargar la imagen e instalarla, antes de reiniciar ejecute un \textit{script}. Y eso es precisamente lo que hacemos en este apartado. Dicho \textit{script} genera un fichero vacío y entra en espera ocupada hasta que el fichero deja de existir.\\
+
+El borrado del fichero vendrá dado por el diálogo de interacción con el usuario, siendo eliminado en cuanto pulsa ``Sí''. Acto seguido, el \textit{script} continúa su curso y el sistema se reinicia.\\
+
+Si se selecciona ``Más tarde'', no es hasta que la máquina es apagada o reiniciada voluntariamente hasta que se entra en la nueva versión.\\
+
+Reitero en que esta lógica está estrechamente vinculada a la aplicación, y la lógica del \textit{script} es simple pero eficaz. Por decisión personal, este paquete propio toma el nombre de \textbf{\textit{mender-update-and-reboot}}, y por supuesto figura dentro de la lista de disponibles en \textbf{\textit{Meta-DYNAsystem}}.
+
+\subsubsection{Actualización interna de la electrónica}
+
+Para terminar, se incluye un paquete llamado \textbf{\textit{hardware-update}} que instala de forma local al sistema de ficheros en compilación el archivo hexadecimal legible por la electrónica, provisto por los ingenieros informáticos del equipo. Una vez más, la distribución no hace más que instalar este fichero en el destino, mientras que es la aplicación embebida quien la tiene en cuenta y realiza la actualización interna del hardware.
+
+\subsection{Caso de estudio con \textit{Hosted Mender}}
+
+Por otro lado, aunque la implementación se da por terminada, retomemos las conversaciones por correo electrónico con el equipo de desarrollo de \textit{Mender}.\\
+
+Tras semanas de comunicación y colaboración ante mis dudas, me propusieron participar en un \textbf{\textit{Caso de estudio de cliente}}, proceso a través del cual ambas empresas podríamos colaborar figurando nuestro proyecto en su página web a modo de publicidad, justificando por qué utilizamos su servicio y qué ventajas encontramos en él.\\
+
+Como aliciente, nos ofrecían un llamativo descuento, que comenté con mi empresa y aceptaron encantados el trámite realizado por mí, dado que además de ganar publicidad gratuita, nos ahorrábamos una futura parte del coste de mantenimiento de los servidores externalizados.\\
+
+Dicho caso de estudio puede consultarse en la referencia \cite{customer-case-study}, donde aparecen (en inglés) mis argumentos sobre el uso de su servicio en la actividad de la empresa.
 
 \newpage
